@@ -1,0 +1,215 @@
+<stylecopresultscache>
+  <version>12</version>
+  <sourcecode name="GlobalSuppressions.cs" parser="StyleCop.CSharp.CsParser">
+    <timestamps>
+      <styleCop>2017/09/12 15:26:43.180</styleCop>
+      <settingsFile>2017/09/12 17:45:05.295</settingsFile>
+      <sourceFile>2017/09/12 15:35:16.074</sourceFile>
+      <parser>2017/09/12 15:26:43.180</parser>
+      <StyleCop.CSharp.DocumentationRules>2017/09/12 15:26:43.180</StyleCop.CSharp.DocumentationRules>
+      <StyleCop.CSharp.DocumentationRules.FilesHashCode>1305902335</StyleCop.CSharp.DocumentationRules.FilesHashCode>
+      <StyleCop.CSharp.LayoutRules>2017/09/12 15:26:43.180</StyleCop.CSharp.LayoutRules>
+      <StyleCop.CSharp.LayoutRules.FilesHashCode>0</StyleCop.CSharp.LayoutRules.FilesHashCode>
+      <StyleCop.CSharp.MaintainabilityRules>2017/09/12 15:26:43.180</StyleCop.CSharp.MaintainabilityRules>
+      <StyleCop.CSharp.MaintainabilityRules.FilesHashCode>0</StyleCop.CSharp.MaintainabilityRules.FilesHashCode>
+      <StyleCop.CSharp.NamingRules>2017/09/12 15:26:43.180</StyleCop.CSharp.NamingRules>
+      <StyleCop.CSharp.NamingRules.FilesHashCode>0</StyleCop.CSharp.NamingRules.FilesHashCode>
+      <StyleCop.CSharp.OrderingRules>2017/09/12 15:26:43.180</StyleCop.CSharp.OrderingRules>
+      <StyleCop.CSharp.OrderingRules.FilesHashCode>0</StyleCop.CSharp.OrderingRules.FilesHashCode>
+      <StyleCop.CSharp.ReadabilityRules>2017/09/12 15:26:43.180</StyleCop.CSharp.ReadabilityRules>
+      <StyleCop.CSharp.ReadabilityRules.FilesHashCode>0</StyleCop.CSharp.ReadabilityRules.FilesHashCode>
+      <StyleCop.CSharp.SpacingRules>2017/09/12 15:26:43.180</StyleCop.CSharp.SpacingRules>
+      <StyleCop.CSharp.SpacingRules.FilesHashCode>0</StyleCop.CSharp.SpacingRules.FilesHashCode>
+    </timestamps>
+    <violations>
+      <violation namespace="StyleCop.CSharp.LayoutRules" rule="SingleLineCommentMustBePrecededByBlankLine" ruleCheckId="SA1515">
+        <context>A single-line comment must be preceded by a blank line or another single-line comment, or must be the first item in its scope. To ignore this error when commenting out a line of code, begin the comment with '////' rather than '//'.</context>
+        <line>20</line>
+        <warning>False</warning>
+      </violation>
+      <violation namespace="StyleCop.CSharp.LayoutRules" rule="CodeMustNotContainBlankLinesAtEndOfFile" ruleCheckId="SA1518">
+        <context>The code must not contain blank lines at the end of the file.</context>
+        <line>29</line>
+        <warning>False</warning>
+      </violation>
+      <violation namespace="StyleCop.CSharp.LayoutRules" rule="CodeMustNotContainMultipleBlankLinesInARow" ruleCheckId="SA1507">
+        <context>The code must not contain multiple blank lines in a row.</context>
+        <line>29</line>
+        <warning>False</warning>
+      </violation>
+      <violation namespace="StyleCop.CSharp.MaintainabilityRules" rule="CodeAnalysisSuppressionMustHaveJustification" ruleCheckId="SA1404">
+        <context>A Code Analysis suppression must contain a non-empty justification describing the reason for the suppression.</context>
+        <line>1</line>
+        <warning>False</warning>
+      </violation>
+      <violation namespace="StyleCop.CSharp.MaintainabilityRules" rule="CodeAnalysisSuppressionMustHaveJustification" ruleCheckId="SA1404">
+        <context>A Code Analysis suppression must contain a non-empty justification describing the reason for the suppression.</context>
+        <line>2</line>
+        <warning>False</warning>
+      </violation>
+      <violation namespace="StyleCop.CSharp.MaintainabilityRules" rule="CodeAnalysisSuppressionMustHaveJustification" ruleCheckId="SA1404">
+        <context>A Code Analysis suppression must contain a non-empty justification describing the reason for the suppression.</context>
+        <line>3</line>
+        <warning>False</warning>
+      </violation>
+      <violation namespace="StyleCop.CSharp.MaintainabilityRules" rule="CodeAnalysisSuppressionMustHaveJustification" ruleCheckId="SA1404">
+        <context>A Code Analysis suppression must contain a non-empty justification describing the reason for the suppression.</context>
+        <line>4</line>
+        <warning>False</warning>
+      </violation>
+      <violation namespace="StyleCop.CSharp.MaintainabilityRules" rule="CodeAnalysisSuppressionMustHaveJustification" ruleCheckId="SA1404">
+        <context>A Code Analysis suppression must contain a non-empty justification describing the reason for the suppression.</context>
+        <line>5</line>
+        <warning>False</warning>
+      </violation>
+      <violation namespace="StyleCop.CSharp.MaintainabilityRules" rule="CodeAnalysisSuppressionMustHaveJustification" ruleCheckId="SA1404">
+        <context>A Code Analysis suppression must contain a non-empty justification describing the reason for the suppression.</context>
+        <line>6</line>
+        <warning>False</warning>
+      </violation>
+      <violation namespace="StyleCop.CSharp.MaintainabilityRules" rule="CodeAnalysisSuppressionMustHaveJustification" ruleCheckId="SA1404">
+        <context>A Code Analysis suppression must contain a non-empty justification describing the reason for the suppression.</context>
+        <line>7</line>
+        <warning>False</warning>
+      </violation>
+      <violation namespace="StyleCop.CSharp.MaintainabilityRules" rule="CodeAnalysisSuppressionMustHaveJustification" ruleCheckId="SA1404">
+        <context>A Code Analysis suppression must contain a non-empty justification describing the reason for the suppression.</context>
+        <line>8</line>
+        <warning>False</warning>
+      </violation>
+      <violation namespace="StyleCop.CSharp.MaintainabilityRules" rule="CodeAnalysisSuppressionMustHaveJustification" ruleCheckId="SA1404">
+        <context>A Code Analysis suppression must contain a non-empty justification describing the reason for the suppression.</context>
+        <line>9</line>
+        <warning>False</warning>
+      </violation>
+      <violation namespace="StyleCop.CSharp.MaintainabilityRules" rule="CodeAnalysisSuppressionMustHaveJustification" ruleCheckId="SA1404">
+        <context>A Code Analysis suppression must contain a non-empty justification describing the reason for the suppression.</context>
+        <line>10</line>
+        <warning>False</warning>
+      </violation>
+      <violation namespace="StyleCop.CSharp.MaintainabilityRules" rule="CodeAnalysisSuppressionMustHaveJustification" ruleCheckId="SA1404">
+        <context>A Code Analysis suppression must contain a non-empty justification describing the reason for the suppression.</context>
+        <line>11</line>
+        <warning>False</warning>
+      </violation>
+      <violation namespace="StyleCop.CSharp.MaintainabilityRules" rule="CodeAnalysisSuppressionMustHaveJustification" ruleCheckId="SA1404">
+        <context>A Code Analysis suppression must contain a non-empty justification describing the reason for the suppression.</context>
+        <line>12</line>
+        <warning>False</warning>
+      </violation>
+      <violation namespace="StyleCop.CSharp.MaintainabilityRules" rule="CodeAnalysisSuppressionMustHaveJustification" ruleCheckId="SA1404">
+        <context>A Code Analysis suppression must contain a non-empty justification describing the reason for the suppression.</context>
+        <line>13</line>
+        <warning>False</warning>
+      </violation>
+      <violation namespace="StyleCop.CSharp.MaintainabilityRules" rule="CodeAnalysisSuppressionMustHaveJustification" ruleCheckId="SA1404">
+        <context>A Code Analysis suppression must contain a non-empty justification describing the reason for the suppression.</context>
+        <line>14</line>
+        <warning>False</warning>
+      </violation>
+      <violation namespace="StyleCop.CSharp.MaintainabilityRules" rule="CodeAnalysisSuppressionMustHaveJustification" ruleCheckId="SA1404">
+        <context>A Code Analysis suppression must contain a non-empty justification describing the reason for the suppression.</context>
+        <line>15</line>
+        <warning>False</warning>
+      </violation>
+      <violation namespace="StyleCop.CSharp.MaintainabilityRules" rule="CodeAnalysisSuppressionMustHaveJustification" ruleCheckId="SA1404">
+        <context>A Code Analysis suppression must contain a non-empty justification describing the reason for the suppression.</context>
+        <line>16</line>
+        <warning>False</warning>
+      </violation>
+      <violation namespace="StyleCop.CSharp.MaintainabilityRules" rule="CodeAnalysisSuppressionMustHaveJustification" ruleCheckId="SA1404">
+        <context>A Code Analysis suppression must contain a non-empty justification describing the reason for the suppression.</context>
+        <line>17</line>
+        <warning>False</warning>
+      </violation>
+      <violation namespace="StyleCop.CSharp.MaintainabilityRules" rule="CodeAnalysisSuppressionMustHaveJustification" ruleCheckId="SA1404">
+        <context>A Code Analysis suppression must contain a non-empty justification describing the reason for the suppression.</context>
+        <line>18</line>
+        <warning>False</warning>
+      </violation>
+      <violation namespace="StyleCop.CSharp.MaintainabilityRules" rule="CodeAnalysisSuppressionMustHaveJustification" ruleCheckId="SA1404">
+        <context>A Code Analysis suppression must contain a non-empty justification describing the reason for the suppression.</context>
+        <line>19</line>
+        <warning>False</warning>
+      </violation>
+    </violations>
+  </sourcecode>
+  <sourcecode name="AssemblyInfo.cs" parser="StyleCop.CSharp.CsParser">
+    <timestamps>
+      <styleCop>2017/09/12 15:26:43.180</styleCop>
+      <settingsFile>2017/09/12 17:45:05.295</settingsFile>
+      <sourceFile>2017/09/12 15:41:18.189</sourceFile>
+      <parser>2017/09/12 15:26:43.180</parser>
+      <StyleCop.CSharp.DocumentationRules>2017/09/12 15:26:43.180</StyleCop.CSharp.DocumentationRules>
+      <StyleCop.CSharp.DocumentationRules.FilesHashCode>1305902335</StyleCop.CSharp.DocumentationRules.FilesHashCode>
+      <StyleCop.CSharp.LayoutRules>2017/09/12 15:26:43.180</StyleCop.CSharp.LayoutRules>
+      <StyleCop.CSharp.LayoutRules.FilesHashCode>0</StyleCop.CSharp.LayoutRules.FilesHashCode>
+      <StyleCop.CSharp.MaintainabilityRules>2017/09/12 15:26:43.180</StyleCop.CSharp.MaintainabilityRules>
+      <StyleCop.CSharp.MaintainabilityRules.FilesHashCode>0</StyleCop.CSharp.MaintainabilityRules.FilesHashCode>
+      <StyleCop.CSharp.NamingRules>2017/09/12 15:26:43.180</StyleCop.CSharp.NamingRules>
+      <StyleCop.CSharp.NamingRules.FilesHashCode>0</StyleCop.CSharp.NamingRules.FilesHashCode>
+      <StyleCop.CSharp.OrderingRules>2017/09/12 15:26:43.180</StyleCop.CSharp.OrderingRules>
+      <StyleCop.CSharp.OrderingRules.FilesHashCode>0</StyleCop.CSharp.OrderingRules.FilesHashCode>
+      <StyleCop.CSharp.ReadabilityRules>2017/09/12 15:26:43.180</StyleCop.CSharp.ReadabilityRules>
+      <StyleCop.CSharp.ReadabilityRules.FilesHashCode>0</StyleCop.CSharp.ReadabilityRules.FilesHashCode>
+      <StyleCop.CSharp.SpacingRules>2017/09/12 15:26:43.180</StyleCop.CSharp.SpacingRules>
+      <StyleCop.CSharp.SpacingRules.FilesHashCode>0</StyleCop.CSharp.SpacingRules.FilesHashCode>
+    </timestamps>
+    <violations />
+  </sourcecode>
+  <sourcecode name="Program.cs" parser="StyleCop.CSharp.CsParser">
+    <timestamps>
+      <styleCop>2017/09/12 15:26:43.180</styleCop>
+      <settingsFile>2017/09/12 17:45:05.295</settingsFile>
+      <sourceFile>2017/09/12 19:48:18.261</sourceFile>
+      <parser>2017/09/12 15:26:43.180</parser>
+      <StyleCop.CSharp.DocumentationRules>2017/09/12 15:26:43.180</StyleCop.CSharp.DocumentationRules>
+      <StyleCop.CSharp.DocumentationRules.FilesHashCode>1305902335</StyleCop.CSharp.DocumentationRules.FilesHashCode>
+      <StyleCop.CSharp.LayoutRules>2017/09/12 15:26:43.180</StyleCop.CSharp.LayoutRules>
+      <StyleCop.CSharp.LayoutRules.FilesHashCode>0</StyleCop.CSharp.LayoutRules.FilesHashCode>
+      <StyleCop.CSharp.MaintainabilityRules>2017/09/12 15:26:43.180</StyleCop.CSharp.MaintainabilityRules>
+      <StyleCop.CSharp.MaintainabilityRules.FilesHashCode>0</StyleCop.CSharp.MaintainabilityRules.FilesHashCode>
+      <StyleCop.CSharp.NamingRules>2017/09/12 15:26:43.180</StyleCop.CSharp.NamingRules>
+      <StyleCop.CSharp.NamingRules.FilesHashCode>0</StyleCop.CSharp.NamingRules.FilesHashCode>
+      <StyleCop.CSharp.OrderingRules>2017/09/12 15:26:43.180</StyleCop.CSharp.OrderingRules>
+      <StyleCop.CSharp.OrderingRules.FilesHashCode>0</StyleCop.CSharp.OrderingRules.FilesHashCode>
+      <StyleCop.CSharp.ReadabilityRules>2017/09/12 15:26:43.180</StyleCop.CSharp.ReadabilityRules>
+      <StyleCop.CSharp.ReadabilityRules.FilesHashCode>0</StyleCop.CSharp.ReadabilityRules.FilesHashCode>
+      <StyleCop.CSharp.SpacingRules>2017/09/12 15:26:43.180</StyleCop.CSharp.SpacingRules>
+      <StyleCop.CSharp.SpacingRules.FilesHashCode>0</StyleCop.CSharp.SpacingRules.FilesHashCode>
+    </timestamps>
+    <violations />
+  </sourcecode>
+  <project key="223186135">
+    <configuration>DEBUG;TRACE</configuration>
+  </project>
+  <sourcecode name="Trie.cs" parser="StyleCop.CSharp.CsParser">
+    <timestamps>
+      <styleCop>2017/09/12 15:26:43.180</styleCop>
+      <settingsFile>2017/09/12 17:45:05.295</settingsFile>
+      <sourceFile>2017/09/13 11:16:37.858</sourceFile>
+      <parser>2017/09/12 15:26:43.180</parser>
+      <StyleCop.CSharp.DocumentationRules>2017/09/12 15:26:43.180</StyleCop.CSharp.DocumentationRules>
+      <StyleCop.CSharp.DocumentationRules.FilesHashCode>1305902335</StyleCop.CSharp.DocumentationRules.FilesHashCode>
+      <StyleCop.CSharp.LayoutRules>2017/09/12 15:26:43.180</StyleCop.CSharp.LayoutRules>
+      <StyleCop.CSharp.LayoutRules.FilesHashCode>0</StyleCop.CSharp.LayoutRules.FilesHashCode>
+      <StyleCop.CSharp.MaintainabilityRules>2017/09/12 15:26:43.180</StyleCop.CSharp.MaintainabilityRules>
+      <StyleCop.CSharp.MaintainabilityRules.FilesHashCode>0</StyleCop.CSharp.MaintainabilityRules.FilesHashCode>
+      <StyleCop.CSharp.NamingRules>2017/09/12 15:26:43.180</StyleCop.CSharp.NamingRules>
+      <StyleCop.CSharp.NamingRules.FilesHashCode>0</StyleCop.CSharp.NamingRules.FilesHashCode>
+      <StyleCop.CSharp.OrderingRules>2017/09/12 15:26:43.180</StyleCop.CSharp.OrderingRules>
+      <StyleCop.CSharp.OrderingRules.FilesHashCode>0</StyleCop.CSharp.OrderingRules.FilesHashCode>
+      <StyleCop.CSharp.ReadabilityRules>2017/09/12 15:26:43.180</StyleCop.CSharp.ReadabilityRules>
+      <StyleCop.CSharp.ReadabilityRules.FilesHashCode>0</StyleCop.CSharp.ReadabilityRules.FilesHashCode>
+      <StyleCop.CSharp.SpacingRules>2017/09/12 15:26:43.180</StyleCop.CSharp.SpacingRules>
+      <StyleCop.CSharp.SpacingRules.FilesHashCode>0</StyleCop.CSharp.SpacingRules.FilesHashCode>
+    </timestamps>
+    <violations>
+      <violation namespace="StyleCop.CSharp.LayoutRules" rule="CurlyBracketsMustNotBeOmitted" ruleCheckId="SA1503">
+        <context>The body of the if statement must be wrapped in opening and closing curly brackets.</context>
+        <line>31</line>
+        <warning>False</warning>
+      </violation>
+    </violations>
+  </sourcecode>
+</stylecopresultscache>
