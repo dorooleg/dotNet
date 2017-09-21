@@ -1,8 +1,6 @@
 ﻿namespace TrieDataSctructure
 {
-    using System;
     using System.Collections.Generic;
-    using System.Linq;
 
     public class Trie
     {
@@ -22,15 +20,25 @@
                 return false;
             }
 
-            var(previousNode, currentNode) = GetLastEdge(
-                                                element,
-                                                (p, c, s) =>
-                                                {
-                                                    c.CountPrefixes++;
-                                                    if (!c.Childs.ContainsKey(s))
-                                                        c.Childs.Add(s, new Node());
-                                                    return false;
-                                                });
+            Node currentNode = root;
+            Node previousNode = root;
+
+            foreach (var c in element)
+            {
+                if (currentNode == null)
+                {
+                    break;
+                }
+
+                if (!currentNode.Childs.ContainsKey(c))
+                {
+                    currentNode.Childs.Add(c, new Node());
+                }
+
+                currentNode.CountPrefixes++;
+                previousNode = currentNode;
+                currentNode = currentNode.GetChild(c);
+            }
 
             previousNode.Terminal = true;
 
@@ -50,8 +58,31 @@
                 return false;
             }
 
-            Remove(root, 0, element);
+            Node currentNode = root;
+            Node previousNode = root;
 
+            previousNode.CountPrefixes--;
+
+            foreach (var c in element)
+            {
+                if (previousNode.CountPrefixes == 0)
+                {
+                    previousNode.Childs.Clear();
+                }
+
+                previousNode = currentNode;
+                currentNode = currentNode.GetChild(c);
+
+                if (currentNode == null)
+                {
+                    break;
+                }
+
+                currentNode.CountPrefixes--;
+            }
+
+            previousNode.Terminal = false;
+            
             return true;
         }
 
@@ -62,41 +93,20 @@
         /// Expected complexity: O(1)
         public int Size() => HowManyStartsWithPrefix(string.Empty);
 
-        private void Remove(Node node, int position, string element)
-        {
-            node.CountPrefixes--;
-            if (position == element.Length - 1)
-            {
-                node.Terminal = false;
-                return;
-            }
-
-            Remove(node.Childs[element[position]], position + 1, element);
-
-            if (node.GetChildCount(element[position]) == 0 && !node.IsTerminalChild(element[position]))
-            {
-                node.Childs.Remove(element[position]);
-            }
-        }
-
         private (Node previousNode, Node currentNode) GetLastEdge(string element)
-            => GetLastEdge(element, (p, c, s) => c == null);
-
-        private (Node previousNode, Node currentNode) 
-            GetLastEdge(string element, Func<Node, Node, char, bool> predicate)
         {
             Node currentNode = root;
             Node previousNode = root;
 
             foreach (var c in element)
             {
-                if (predicate(previousNode, currentNode, c))
+                if (currentNode == null)
                 {
                     break;
                 }
 
                 previousNode = currentNode;
-                currentNode = currentNode.Childs.ContainsKey(c) ? currentNode.Childs[c] : null;
+                currentNode = currentNode.GetChild(c);
             }
 
             return (previousNode, currentNode);
@@ -116,24 +126,7 @@
 
             public int CountPrefixes { get; set; }
 
-            public Node GetChild(char s)
-            {
-                Node node;
-                Childs.TryGetValue(s, out node);
-                return node;
-            }
-
-            public int GetChildCount(char s)
-            {
-                Node node = GetChild(s);
-                return node == null ? 0 : node.Childs.Count;
-            }
-
-            public bool IsTerminalChild(char s)
-            {
-                Node node = GetChild(s);
-                return node == null ? false : node.Terminal;
-            }
+            public Node GetChild(char s) => Childs.TryGetValue(s, out Node node) ? node : null;
         }
     }
 }

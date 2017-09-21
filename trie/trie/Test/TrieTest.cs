@@ -79,7 +79,7 @@
 
         [TestMethod]
         public void DifficultTest()
-        {
+        { 
             Assert.IsTrue(trie.Add("common"));
             Assert.IsTrue(trie.Add("data"));
             Assert.IsTrue(trie.Add("dat"));
