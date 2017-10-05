@@ -2,17 +2,15 @@
 {
     using System.Collections.Generic;
 
-    public class Trie
+    public class Trie : ITrie
     {
-        private Node root;
+        private readonly Node _root;
 
         public Trie()
         {
-            root = new Node();
+            _root = new Node();
         }
 
-        /// Expected complexity: O(|element|)
-        /// Returns true if this set did not already contain the specified element
         public bool Add(string element)
         {
             if (Contains(element))
@@ -20,37 +18,32 @@
                 return false;
             }
 
-            Node currentNode = root;
-            Node previousNode = root;
+            Node nextNode = _root;
+            Node currentNode = _root;
 
-            foreach (var c in element)
+            foreach (char c in element)
             {
-                if (currentNode == null)
+                if (!nextNode.Childs.ContainsKey(c))
                 {
-                    break;
+                    nextNode.Childs.Add(c, new Node());
                 }
 
-                if (!currentNode.Childs.ContainsKey(c))
-                {
-                    currentNode.Childs.Add(c, new Node());
-                }
-
-                currentNode.CountPrefixes++;
-                previousNode = currentNode;
-                currentNode = currentNode.GetChild(c);
+                ++nextNode.CountPrefixes;
+                currentNode = nextNode;
+                nextNode = nextNode.GetChild(c);
             }
 
-            previousNode.Terminal = true;
+            currentNode.IsTerminal = true;
 
             return true;
         }
 
-        /// Expected complexity: O(|element|)
         public bool Contains(string element)
-            => GetLastEdge(element).previousNode.Terminal;
+        {
+            (Node currentNode, Node nextNode) edge = GetLastEdge(element);
+            return edge.nextNode != null && edge.currentNode.IsTerminal;
+        }
 
-        /// Expected complexity: O(|element|)
-        /// Returns true if this set contained the specified element
         public bool Remove(string element)
         {
             if (!Contains(element))
@@ -58,71 +51,63 @@
                 return false;
             }
 
-            Node currentNode = root;
-            Node previousNode = root;
+            Node nextNode = _root;
+            Node currentNode = _root;
 
-            previousNode.CountPrefixes--;
+            --currentNode.CountPrefixes;
 
-            foreach (var c in element)
+            foreach (char c in element)
             {
-                if (previousNode.CountPrefixes == 0)
+                if (currentNode.CountPrefixes == 0)
                 {
-                    previousNode.Childs.Clear();
+                    currentNode.Childs.Clear();
                 }
 
-                previousNode = currentNode;
-                currentNode = currentNode.GetChild(c);
+                currentNode = nextNode;
+                nextNode = nextNode.GetChild(c);
 
-                if (currentNode == null)
+                if (nextNode == null)
                 {
                     break;
                 }
 
-                currentNode.CountPrefixes--;
+                nextNode.CountPrefixes--;
             }
 
-            previousNode.Terminal = false;
+            currentNode.IsTerminal = false;
             
             return true;
         }
 
-        /// Expected complexity: O(|prefix|)
         public int HowManyStartsWithPrefix(string prefix)
-            => (GetLastEdge(prefix).currentNode?.CountPrefixes).GetValueOrDefault(0);
+            => (GetLastEdge(prefix).nextNode?.CountPrefixes).GetValueOrDefault(0);
 
-        /// Expected complexity: O(1)
-        public int Size() => HowManyStartsWithPrefix(string.Empty);
+        public int Size() => _root.CountPrefixes;
 
-        private (Node previousNode, Node currentNode) GetLastEdge(string element)
+        private (Node currentNode, Node nextNode) GetLastEdge(string element)
         {
-            Node currentNode = root;
-            Node previousNode = root;
+            Node nextNode = _root;
+            Node currentNode = _root;
 
-            foreach (var c in element)
+            foreach (char c in element)
             {
-                if (currentNode == null)
+                if (nextNode == null)
                 {
                     break;
                 }
 
-                previousNode = currentNode;
-                currentNode = currentNode.GetChild(c);
+                currentNode = nextNode;
+                nextNode = nextNode.GetChild(c);
             }
 
-            return (previousNode, currentNode);
+            return (currentNode, nextNode);
         }
 
         private class Node
         {
-            private IDictionary<char, Node> childs = new Dictionary<char, Node>();
+            public IDictionary<char, Node> Childs { get; set; } = new Dictionary<char, Node>();
 
-            public IDictionary<char, Node> Childs
-            {
-                get { return childs; }
-                set { childs = value;  }
-            }
-
-            public bool Terminal { get; set; }
+            public bool IsTerminal { get; set; }
 
             public int CountPrefixes { get; set; }
 

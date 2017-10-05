@@ -6,7 +6,7 @@
     [TestClass]
     public class TrieTest
     {
-        private Trie trie;
+        private ITrie trie;
 
         [TestInitialize]
         public void Initialize()
@@ -93,6 +93,15 @@
             Assert.IsTrue(trie.Contains("dat"));
             Assert.IsFalse(trie.Add("dat"));
             Assert.AreEqual(2, trie.HowManyStartsWithPrefix("d"));
+        }
+
+        [TestMethod]
+        public void ContainsTest()
+        {
+            Assert.IsTrue(trie.Add("common1"));
+            Assert.IsFalse(trie.Contains("common2"));
+            Assert.IsTrue(trie.Add("common2"));
+            Assert.IsTrue(trie.Contains("common2"));
         }
     }
 }
