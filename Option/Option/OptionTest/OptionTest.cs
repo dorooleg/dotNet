@@ -1,8 +1,9 @@
-﻿namespace OptionTest
+﻿using Option;
+
+namespace OptionTest
 {
     using System.Collections.Generic;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using OptionNamespace;
 
     [TestClass]
     public class OptionTest

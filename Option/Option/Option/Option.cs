@@ -1,39 +1,39 @@
-﻿namespace OptionNamespace
-{
-    using System;
-    using JetBrains.Annotations;
+﻿using System;
+using JetBrains.Annotations;
 
+namespace Option
+{
     public class Option<T>
     {
-        private static Option<T> none = new Option<T>();
+        private static readonly Option<T> NoneField = new Option<T>();
 
-        private T value;
-        private bool empty; 
+        private readonly T _value;
+        private readonly bool _empty; 
 
         private Option(T value)
         {
-            this.value = value;
-            empty = false;
+            _value = value;
+            _empty = false;
         }
 
         private Option()
         {
-            empty = true;
+            _empty = true;
         }
 
         public static Option<T> Some([NotNull] T value) => new Option<T>(value);
 
-        public static Option<T> None() => none;
+        public static Option<T> None() => NoneField;
 
         public static Option<T> Flatten(Option<Option<T>> option)
             => option.IsNone() ? None() : option.Value();
 
-        public bool IsSome() => !empty;
+        public bool IsSome() => !_empty;
 
-        public bool IsNone() => empty;
+        public bool IsNone() => _empty;
 
-        public T Value() => IsNone() ? throw new InvalidOperationException() : value;
+        public T Value() => IsNone() ? throw new InvalidOperationException() : _value;
 
-        public Option<U> Map<U>(Func<T, U> f) => IsNone() ? Option<U>.None() : Option<U>.Some(f(Value()));
+        public Option<TU> Map<TU>(Func<T, TU> f) => IsNone() ? Option<TU>.None() : Option<TU>.Some(f(Value()));
     }
 }
