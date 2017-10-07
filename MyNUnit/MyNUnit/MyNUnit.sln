@@ -8,6 +8,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNUnitTest", "MyNUnitTest\MyNUnitTest.csproj", "{7814E126-AA09-4241-B49C-0956D4211DCD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyNUnitFrameworkTest", "..\MyNUnitFrameworkTest\MyNUnitFrameworkTest\MyNUnitFrameworkTest.csproj", "{02B8B29A-8F51-4465-BC5F-37D23ABFFB55}"
+	ProjectSection(ProjectDependencies) = postProject
+		{7814E126-AA09-4241-B49C-0956D4211DCD} = {7814E126-AA09-4241-B49C-0956D4211DCD}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

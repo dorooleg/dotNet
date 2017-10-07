@@ -3,16 +3,16 @@
     using System;
     using MyNUnit;
     
-    public class UnitTest3
+    public class AfterClassException
     {
-        [BeforeClass]
+        [AfterClass]
         public void SetUp()
         {
             throw new ArgumentException();
         }
 
         [Test]
-        public void Test1()
+        public void Test()
         {
         }
     }

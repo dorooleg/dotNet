@@ -17,11 +17,12 @@
             {
                 try
                 {
-                    TestEngine engine = new TestEngine(dir);
+                    var engine = new TestEngine(dir);
                     Console.WriteLine(engine.Report());
                 }
                 catch
                 {
+                    // ignored
                 }
             }
         }

@@ -1,4 +1,6 @@
-﻿namespace MyNUnitFrameworkTest
+﻿using System.Text.RegularExpressions;
+
+namespace MyNUnitFrameworkTest
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -58,11 +60,38 @@
         public void IsTestClass()
         {
             Assert.IsTrue((bool)typeof(TestEngine).GetMethod("IsTestClass", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { typeof(TestClass) }));
-            Assert.IsFalse((bool)typeof(TestEngine).GetMethod("IsTestClass", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { typeof(NoTestClass1) }));
-            Assert.IsFalse((bool)typeof(TestEngine).GetMethod("IsTestClass", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { typeof(NoTestClass2) }));
-            Assert.IsFalse((bool)typeof(TestEngine).GetMethod("IsTestClass", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { typeof(NoTestClass3) }));
-            Assert.IsFalse((bool)typeof(TestEngine).GetMethod("IsTestClass", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { typeof(NoTestClass4) }));
-            Assert.IsFalse((bool)typeof(TestEngine).GetMethod("IsTestClass", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { typeof(NoTestClass5) }));
+            Assert.IsFalse((bool)typeof(TestEngine).GetMethod("IsTestClass", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { typeof(EmptyClass) }));
+            Assert.IsFalse((bool)typeof(TestEngine).GetMethod("IsTestClass", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { typeof(BeforeArgs) }));
+            Assert.IsFalse((bool)typeof(TestEngine).GetMethod("IsTestClass", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { typeof(TestWithArgs) }));
+            Assert.IsFalse((bool)typeof(TestEngine).GetMethod("IsTestClass", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { typeof(AfterWithArgs) }));
+            Assert.IsFalse((bool)typeof(TestEngine).GetMethod("IsTestClass", BindingFlags.NonPublic | BindingFlags.Static).Invoke(null, new object[] { typeof(AfterClassArgs) }));
+        }
+
+        [TestMethod]
+        public void ReportTest()
+        {
+            var te = new TestEngine(@"..\..\..\..\MyNUnit\MyNUnitTest\bin\Debug\MyNUnitTest.dll");
+            var report = te.Report();
+
+            const string pattern = @"Test:\sUnitTest1" +
+                                   @"\s*\[.*\]\sTestMethod1:\sFailed" +
+                                   @"\s*TestMethod2\s\(just\sskip\):\sIgnore" +
+                                   @"\s*\[.*\]\sTestMethod3:\sSuccess" +
+                                   @"\s*Test:\sBeforeClassException" +
+                                   @"\s*BofreClass\sexception\.\sStop\stests" +
+                                   @"\s*Test: BeforeException" +
+                                   @"\s*BeforeException!" +
+                                   @"\s*Test:\sAfterException" +
+                                   @"\s*\[.*\]\sTest:\sSuccess" +
+                                   @"\s*After\sexception!" +
+                                   @"\s*Test:\sAfterClassException" +
+                                   @"\s*\[.*\]\sTest:\sSuccess" +
+                                   @"\s*AfterClass\sexception.\sStop\stests" +
+                                   @"\s*Test:\sTestException" +
+                                   @"\s*\[.*\]\sTest:\sFailed";
+
+            Assert.IsTrue(Regex.Match(report, pattern).Success);
+
         }
     }
 }

@@ -3,16 +3,16 @@
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using MyNUnit;
 
-    public class NoTestClass3
+    public class AfterWithArgs
     {
-        [Test]
+        [After]
         [ExpectedException(typeof(TestClass))]
-        public void Test(int a)
+        public void After(int a)
         {
         }
 
-        [Test]
-        public void Test0(int a)
+        [After]
+        public void After0(int a)
         {
         }
     }

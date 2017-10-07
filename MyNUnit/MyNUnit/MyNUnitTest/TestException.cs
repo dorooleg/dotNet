@@ -3,7 +3,7 @@
     using System;
     using MyNUnit;
     
-    public class UnitTest7
+    public class TestException
     {
         [Test]
         public void Test()

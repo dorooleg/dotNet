@@ -1,14 +1,12 @@
 ﻿namespace MyNUnitTest
 {
-    using System;
     using MyNUnit;
-    
-    public class UnitTest6
+
+    public class NoDefaultConstructor
     {
-        [AfterClass]
-        public void SetUp()
+        // ReSharper disable once UnusedParameter.Local
+        public NoDefaultConstructor(int a)
         {
-            throw new ArgumentException();
         }
 
         [Test]

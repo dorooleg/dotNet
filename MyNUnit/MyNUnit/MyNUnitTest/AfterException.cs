@@ -1,11 +1,14 @@
 ﻿namespace MyNUnitTest
 {
+    using System;
     using MyNUnit;
-
-    public class UnitTest2
+    
+    public class AfterException
     {
-        public UnitTest2(int a)
+        [After]
+        public void SetUp()
         {
+            throw new ArgumentException();
         }
 
         [Test]

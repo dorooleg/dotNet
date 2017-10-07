@@ -1,28 +1,28 @@
-﻿namespace MyNUnit
-{
-    using System;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Linq;
-    using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Reflection;
 
+namespace MyNUnit
+{
     public class TestEngine
     {
-        private Assembly assembly;
+        private readonly Assembly _assembly;
 
         public TestEngine(string path)
         {
-            assembly = Assembly.LoadFrom(path);
+            _assembly = Assembly.LoadFrom(path);
         }
 
         public string Report()
         {
-            string report = string.Empty;
+            var report = string.Empty;
             foreach (var clazz in GetTestClasses())
             {
                 report += "Test: " + clazz.Name + "\n";
 
-                object instance = null;
+                object instance;
 
                 try
                 {
@@ -36,6 +36,7 @@
 
                 try
                 {
+                    // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
                     GetBeforeClassMethods(clazz).Select(m => m.Invoke(instance, null)).ToList();
                 }
                 catch
@@ -47,7 +48,7 @@
                 foreach (var test in GetTestMethods(clazz))
                 {
                     var attribute = test.GetCustomAttribute(typeof(Test)) as Test;
-                    if (attribute.Ignore != null)
+                    if (attribute?.Ignore != null)
                     {
                         report += "  " + test.Name + " (" + attribute.Ignore + "): Ignore\n";
                         continue;
@@ -55,6 +56,7 @@
 
                     try
                     {
+                        // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
                         GetBeforeMethods(clazz).Select(m => m.Invoke(instance, null)).ToList();
                     }
                     catch
@@ -63,18 +65,18 @@
                         continue;
                     }
 
-                    bool failed = false;
-                    Stopwatch sw = new Stopwatch();
+                    bool failed;
+                    var sw = new Stopwatch();
                     try
                     {
                         sw.Start();
                         test.Invoke(instance, null);
 
-                        failed = attribute.Expected != null;
+                        failed = attribute?.Expected != null;
                     }
                     catch (TargetInvocationException e)
                     {
-                        failed = e.InnerException.GetType() != attribute.Expected;
+                        failed = e.InnerException?.GetType() != attribute?.Expected;
                     }
                     finally
                     {
@@ -85,6 +87,7 @@
 
                     try
                     {
+                        // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
                         GetAfterMethods(clazz).Select(m => m.Invoke(instance, null)).ToList();
                     }
                     catch
@@ -95,6 +98,7 @@
 
                 try
                 {
+                    // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
                     GetAfterClassMethods(clazz).Select(m => m.Invoke(instance, null)).ToList();
                 }
                 catch
@@ -107,23 +111,21 @@
         }
 
         private static bool IsTestClass(Type clazz)
-            => clazz.GetMethods()
-                .Where(m => m.GetParameters().Count() == 0
-                            && m.GetCustomAttributesData().Count() == 1
+            => clazz
+                .GetMethods().Any(m => !m.GetParameters().Any()
+                            && m.GetCustomAttributesData().Count == 1
                             && m.GetCustomAttributesData()
-                                .Where(a => new Type[] { typeof(Test), typeof(Before),
+                                .Any(a => new[] { typeof(Test), typeof(Before),
                                                          typeof(After), typeof(BeforeClass),
                                                          typeof(AfterClass)
-                                                       }.Any(x => x == a.AttributeType))
-                             .Any()).Any();
+                                                       }.Any(x => x == a.AttributeType)));
 
         private static IEnumerable<MethodInfo> GetMethodsWithAttribute(Type clazz, Type attribute)
             => clazz.GetMethods()
-                .Where(m => m.GetParameters().Count() == 0
-                            && m.GetCustomAttributesData().Count() == 1
+                .Where(m => !m.GetParameters().Any()
+                            && m.GetCustomAttributesData().Count == 1
                             && m.GetCustomAttributesData()
-                                .Where(a => a.AttributeType == attribute)
-                                .Any());
+                                .Any(a => a.AttributeType == attribute));
 
         private static IEnumerable<MethodInfo> GetTestMethods(Type clazz)
             => GetMethodsWithAttribute(clazz, typeof(Test));
@@ -141,7 +143,7 @@
             => GetMethodsWithAttribute(clazz, typeof(AfterClass));
 
         private IEnumerable<Type> GetTestClasses()
-            => assembly
+            => _assembly
                 .ExportedTypes
                 .Where(t => t.IsClass && IsTestClass(t) && t.GetConstructor(Type.EmptyTypes) != null);
     }

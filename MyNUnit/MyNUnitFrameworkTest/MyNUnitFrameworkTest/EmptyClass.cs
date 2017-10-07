@@ -1,6 +1,6 @@
 ﻿namespace MyNUnitFrameworkTest
 {
-    class NoTestClass1
+    class EmptyClass
     {
     }
 }

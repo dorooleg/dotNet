@@ -3,7 +3,7 @@
     using System;
     using MyNUnit;
 
-    public class UnitTest4
+    public class BeforeException
     {
         [Before]
         public void SetUp()
