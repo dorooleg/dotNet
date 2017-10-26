@@ -38,8 +38,6 @@
   <ItemGroup>
     <Compile Include="After.cs" />
     <Compile Include="AfterClass.cs" />
-    <Compile Include="AssertFailedException.cs" />
-    <Compile Include="Asserts.cs" />
     <Compile Include="Test.cs" />
     <Compile Include="Before.cs" />
     <Compile Include="BeforeClass.cs" />

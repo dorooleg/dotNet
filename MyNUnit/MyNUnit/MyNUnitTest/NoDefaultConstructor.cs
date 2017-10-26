@@ -1,12 +1,14 @@
-﻿namespace MyNUnitTest
-{
-    using MyNUnit;
+﻿using MyNUnit;
 
+namespace MyNUnitTest
+{
     public class NoDefaultConstructor
     {
-        // ReSharper disable once UnusedParameter.Local
+        public int A;
+
         public NoDefaultConstructor(int a)
         {
+            A = a;
         }
 
         [Test]

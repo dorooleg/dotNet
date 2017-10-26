@@ -1,8 +1,9 @@
-﻿namespace MyNUnitTest
-{
-    using System;
-    using MyNUnit;
-    
+﻿using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MyNUnit;
+
+namespace MyNUnitTest
+{    
     public class UnitTest1
     {
         [BeforeClass]
@@ -29,13 +30,13 @@
         [Test]
         public void TestMethod1()
         {
-            Asserts.IsTrue(5 < 3);
+            Assert.IsTrue(5 < 3);
         }
 
         [Test(Ignore = "just skip")]
         public void TestMethod2()
         {
-            Asserts.IsTrue(5 < 3);
+            Assert.IsTrue(5 < 3);
         }
 
         [Test(Expected = typeof(ArgumentException))]

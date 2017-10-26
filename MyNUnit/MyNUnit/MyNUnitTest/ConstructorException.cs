@@ -2,17 +2,16 @@
 using MyNUnit;
 
 namespace MyNUnitTest
-{    
-    public class AfterException
+{
+    public class ConstructorException
     {
-        [After]
-        public void SetUp()
+        public ConstructorException()
         {
             throw new ArgumentException();
         }
 
         [Test]
-        public void Test()
+        public void TestMethod1()
         {
         }
     }

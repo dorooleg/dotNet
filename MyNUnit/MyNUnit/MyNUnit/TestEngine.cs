@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 
 namespace MyNUnit
 {
@@ -17,10 +18,10 @@ namespace MyNUnit
 
         public string Report()
         {
-            var report = string.Empty;
+            var report = new StringBuilder();
             foreach (var clazz in GetTestClasses())
             {
-                report += "Test: " + clazz.Name + "\n";
+                report.AppendLine($"Test: {clazz.Name}");
 
                 object instance;
 
@@ -30,18 +31,17 @@ namespace MyNUnit
                 }
                 catch
                 {
-                    report += " CreateInstance exception. Stop tests \n";
+                    report.AppendLine(" CreateInstance exception. Stop tests ");
                     continue;
                 }
 
                 try
                 {
-                    // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-                    GetBeforeClassMethods(clazz).Select(m => m.Invoke(instance, null)).ToList();
+                    GetBeforeClassMethods(clazz).ForEach(m => m.Invoke(instance, null));
                 }
                 catch
                 {
-                    report += " BofreClass exception. Stop tests \n";
+                    report.AppendLine(" BeforeClass exception. Stop tests ");
                     continue;
                 }
 
@@ -50,18 +50,17 @@ namespace MyNUnit
                     var attribute = test.GetCustomAttribute(typeof(Test)) as Test;
                     if (attribute?.Ignore != null)
                     {
-                        report += "  " + test.Name + " (" + attribute.Ignore + "): Ignore\n";
+                        report.AppendLine($"  {test.Name} ({attribute.Ignore}): Ignore");
                         continue;
                     }
 
                     try
                     {
-                        // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-                        GetBeforeMethods(clazz).Select(m => m.Invoke(instance, null)).ToList();
+                        GetBeforeMethods(clazz).ForEach(m => m.Invoke(instance, null));
                     }
                     catch
                     {
-                        report += "   BeforeException!\n";
+                        report.AppendLine("   BeforeException!");
                         continue;
                     }
 
@@ -83,63 +82,65 @@ namespace MyNUnit
                         sw.Stop();
                     }
 
-                    report += "  [" + sw.Elapsed + "] " + test.Name + ": " + (failed ? "Failed" : "Success") + "\n";
+                    report.AppendLine($"  [{sw.Elapsed}] {test.Name}: {(failed ? "Failed" : "Success")}");
 
                     try
                     {
-                        // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-                        GetAfterMethods(clazz).Select(m => m.Invoke(instance, null)).ToList();
+                        GetAfterMethods(clazz).ForEach(m => m.Invoke(instance, null));
                     }
                     catch
                     {
-                        report += "    After exception!\n";
+                        report.AppendLine("    After exception!");
                     }
                 }
 
                 try
                 {
-                    // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-                    GetAfterClassMethods(clazz).Select(m => m.Invoke(instance, null)).ToList();
+                    GetAfterClassMethods(clazz).ForEach(m => m.Invoke(instance, null));
                 }
                 catch
                 {
-                    report += " AfterClass exception. Stop tests\n";
+                    report.AppendLine(" AfterClass exception. Stop tests");
                 }
             }
 
-            return report;
+            return report.ToString();
         }
+
+        private static readonly Type[] TypeAttributes = {
+            typeof(Test), typeof(Before),
+            typeof(After), typeof(BeforeClass),
+            typeof(AfterClass)
+        };
 
         private static bool IsTestClass(Type clazz)
             => clazz
                 .GetMethods().Any(m => !m.GetParameters().Any()
                             && m.GetCustomAttributesData().Count == 1
                             && m.GetCustomAttributesData()
-                                .Any(a => new[] { typeof(Test), typeof(Before),
-                                                         typeof(After), typeof(BeforeClass),
-                                                         typeof(AfterClass)
-                                                       }.Any(x => x == a.AttributeType)));
+                                .Any(a => TypeAttributes.Contains(a.AttributeType)));
 
-        private static IEnumerable<MethodInfo> GetMethodsWithAttribute(Type clazz, Type attribute)
-            => clazz.GetMethods()
+        private static List<MethodInfo> GetMethodsWithAttribute(Type clazz, Type attribute)
+            => clazz
+                .GetMethods()
                 .Where(m => !m.GetParameters().Any()
                             && m.GetCustomAttributesData().Count == 1
                             && m.GetCustomAttributesData()
-                                .Any(a => a.AttributeType == attribute));
+                                .Any(a => a.AttributeType == attribute)).ToList();
 
-        private static IEnumerable<MethodInfo> GetTestMethods(Type clazz)
+        private static List<MethodInfo> GetTestMethods(Type clazz)
             => GetMethodsWithAttribute(clazz, typeof(Test));
 
-        private static IEnumerable<MethodInfo> GetBeforeMethods(Type clazz)
+        private static List<MethodInfo> GetBeforeMethods(Type clazz)
             => GetMethodsWithAttribute(clazz, typeof(Before));
 
-        private static IEnumerable<MethodInfo> GetAfterMethods(Type clazz)
+        private static List<MethodInfo> GetAfterMethods(Type clazz)
             => GetMethodsWithAttribute(clazz, typeof(After));
 
-        private static IEnumerable<MethodInfo> GetBeforeClassMethods(Type clazz)
+        private static List<MethodInfo> GetBeforeClassMethods(Type clazz)
             => GetMethodsWithAttribute(clazz, typeof(BeforeClass));
 
-        private static IEnumerable<MethodInfo> GetAfterClassMethods(Type clazz)
+        private static List<MethodInfo> GetAfterClassMethods(Type clazz)
             => GetMethodsWithAttribute(clazz, typeof(AfterClass));
 
         private IEnumerable<Type> GetTestClasses()

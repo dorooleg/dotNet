@@ -1,8 +1,8 @@
-﻿namespace MyNUnit
-{
-    using System;
-    using System.IO;
+﻿using System;
+using System.IO;
 
+namespace MyNUnit
+{
     public class Program
     {
         public static void Main(string[] args)

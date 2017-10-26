@@ -1,8 +1,8 @@
-﻿namespace MyNUnitTest
-{
-    using System;
-    using MyNUnit;
-    
+﻿using System;
+using MyNUnit;
+
+namespace MyNUnitTest
+{    
     public class AfterClassException
     {
         [AfterClass]

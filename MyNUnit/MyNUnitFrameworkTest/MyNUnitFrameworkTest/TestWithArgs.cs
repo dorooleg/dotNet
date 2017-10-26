@@ -1,8 +1,8 @@
-﻿namespace MyNUnitFrameworkTest
-{
-    using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using MyNUnit;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+using MyNUnit;
 
+namespace MyNUnitFrameworkTest
+{
     public class TestWithArgs
     {
         [Test]
