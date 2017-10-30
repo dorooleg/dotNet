@@ -72,9 +72,52 @@ namespace OptionTest
         }
 
         [TestMethod]
-        public void OperatorEqualTest()
+        public void SomeEqualNoneTest()
+        {
+            Assert.AreEqual(Option<int>.None, Option<int>.None);
+        }
+
+        [TestMethod]
+        public void SomeNotEqualsNoneTest()
+        {
+            Assert.AreNotEqual(Option<int>.None, Option<int>.Some(4));
+        }
+
+        [TestMethod]
+        public void SomeNotEqualsSomeTest()
+        {
+            Assert.AreNotEqual(Option<int>.Some(2).Map(x => x * 2), Option<int>.Some(5));
+        }
+
+        [TestMethod]
+        public void OperatorEqualsTest()
         {
             Assert.IsTrue(Option<int>.Some(2).Map(x => x * 2) == Option<int>.Some(4));
+        }
+
+        [TestMethod]
+        public void OperatorEqualsNoneTest()
+        {
+            // ReSharper disable once EqualExpressionComparison
+            Assert.IsTrue(Option<int>.None == Option<int>.None);
+        }
+
+        [TestMethod]
+        public void OperatorNotEqualsNoneTest()
+        {
+            Assert.IsFalse(Option<int>.Some(2).Map(x => x * 2) == Option<int>.None);
+        }
+
+        [TestMethod]
+        public void OperatorNotEqualsTest()
+        {
+            Assert.IsFalse(Option<int>.Some(2).Map(x => x * 2) == Option<int>.Some(5));
+        }
+
+        [TestMethod]
+        public void HashCodeTest()
+        {
+            Assert.IsTrue(Option<int>.Some(2).Map(x => x * 2).GetHashCode() == Option<int>.Some(4).GetHashCode());
         }
 
         [TestMethod]
