@@ -1,0 +1,44 @@
+﻿<Window x:Class="TickTacToe.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="400" Width="400" ResizeMode="NoResize">
+
+    <Grid>
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="_Game">
+                    <MenuItem Header="_New">
+                        <MenuItem Header="_User" Click="User_OnClick" />
+                        <MenuItem Header="_Computer">
+                            <MenuItem Header="_Easy" Click="Easy_OnClick" />
+                            <MenuItem Header="_Medium" Click="Medium_OnClick" />
+                        </MenuItem>
+                    </MenuItem>
+                    <MenuItem Header="_Exit" Click="Exit_OnClick" />
+                </MenuItem>
+            </Menu>
+            <Grid DockPanel.Dock="Top" Name="Statistics" Visibility="Collapsed">
+                <DockPanel>
+                    <DockPanel DockPanel.Dock="Left">
+                    <Label Content="Win: "  />
+                    <Label Content="" Name="CountWin" />
+                    </DockPanel>
+                    <DockPanel DockPanel.Dock="Left">
+                        <Label Content="Lose: "  />
+                        <Label Content="" Name="CountLose"  />
+                    </DockPanel>
+                    <DockPanel DockPanel.Dock="Left">
+                        <Label Content="Draw: " />
+                        <Label Content="" Name="CountDraw" />
+                    </DockPanel>
+                </DockPanel>
+            </Grid>
+            <UniformGrid Name="ButtonsGrid">
+            </UniformGrid>
+        </DockPanel>
+    </Grid>
+
+</Window>
