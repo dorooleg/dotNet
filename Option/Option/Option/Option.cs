@@ -26,7 +26,7 @@ namespace Option
 
         public static Option<T> None { get; }
 
-        public static Option<T> Flatten(Option<Option<T>> option) => option.IsNone ? None : option.Value;
+        public static Option<T> Flatten([NotNull] Option<Option<T>> option) => option.IsNone ? None : option.Value;
 
         public bool IsSome => !IsNone;
 
@@ -34,7 +34,7 @@ namespace Option
 
         public T Value => IsNone ? throw new InvalidOperationException() : _value;
 
-        public Option<TU> Map<TU>(Func<T, TU> f) => IsNone ? Option<TU>.None : Option<TU>.Some(f(Value));
+        public Option<TU> Map<TU>([NotNull] Func<T, TU> f) => IsNone ? Option<TU>.None : Option<TU>.Some(f(Value));
 
         public override bool Equals(object obj)
             => obj is Option<T> && this == (Option<T>) obj;

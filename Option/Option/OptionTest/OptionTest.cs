@@ -1,4 +1,6 @@
-﻿using Option;
+﻿using System;
+using System.Reflection;
+using Option;
 
 namespace OptionTest
 {
@@ -133,6 +135,33 @@ namespace OptionTest
             var flatNone = Option<int>.Flatten(valueNone);
             Assert.AreEqual(typeof(Option<int>), flatNone.GetType());
             Assert.IsTrue(flatNone.IsNone);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(System.NullReferenceException))]
+        public void NullFlatten()
+        {
+            Option<int>.Flatten(null);
+        }
+
+        [TestMethod]
+        public void NullFlattenInner()
+        {
+            var value = Option<Option<int>>.Some(null);
+            Assert.IsNull(Option<int>.Flatten(value));
+        }
+
+        [TestMethod]
+        public void MapNull()
+        {
+            Assert.IsNull(Option<Pointer>.Some(null).Map(x => x).Value);
+        }
+
+        [TestMethod]
+        [ExpectedException(typeof(System.NullReferenceException))]
+        public void MapRight()
+        {
+            Assert.IsNull(Option<Array>.Some(new int[10]).Map((Func<Array, Array>)null));
         }
     }
 }
