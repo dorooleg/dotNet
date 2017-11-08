@@ -13,8 +13,9 @@ namespace MultithreadingTests
         private IBlockingArrayQueue<int> CreateInstanceQueue(Type clazz)
         {
             var count = clazz.GetConstructors()[0].GetParameters().Length;
-            return count == 0 ? (IBlockingArrayQueue<int>)Activator.CreateInstance(clazz)
-                : (IBlockingArrayQueue<int>)Activator.CreateInstance(clazz, 20);
+            return count == 0
+                ? (IBlockingArrayQueue<int>) Activator.CreateInstance(clazz)
+                : (IBlockingArrayQueue<int>) Activator.CreateInstance(clazz, 20);
         }
 
         [DataTestMethod]

@@ -19,9 +19,7 @@ namespace Multithreading
             {
                 var oldHead = _head;
                 while ((oldHead + 1) % _queue.Length == _tail)
-                {
                     oldHead = _head;
-                }
 
                 if (Interlocked.CompareExchange(ref _queue[oldHead], new Boxed<T>(e), null) != null)
                     continue;
@@ -36,9 +34,7 @@ namespace Multithreading
             {
                 var oldTail = _tail;
                 while (_head == _tail)
-                {
                     oldTail = _tail;
-                }
 
                 var res = _queue[oldTail];
 
@@ -53,9 +49,7 @@ namespace Multithreading
         {
             var oldTail = _tail;
             if (_head == _tail)
-            {
                 return false;
-            }
 
             var res = _queue[oldTail];
 
@@ -70,9 +64,7 @@ namespace Multithreading
         {
             var oldHead = _head;
             if ((oldHead + 1) % _queue.Length == _tail)
-            {
                 return false;
-            }
 
             if (Interlocked.CompareExchange(ref _queue[oldHead], new Boxed<T>(e), null) != null)
                 return false;
