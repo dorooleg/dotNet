@@ -4,13 +4,13 @@ namespace Multithreading
 {
     public class NewLockFreeArrayQueue<T> : IBlockingArrayQueue<T>
     {
-        private readonly T[] _queue;
+        private readonly Boxed<T>[] _queue;
         private int _head;
         private int _tail;
 
         public NewLockFreeArrayQueue(int n)
         {
-            _queue = new T[n];
+            _queue = new Boxed<T>[n];
         }
 
         public void Enqueue(T e)
@@ -22,13 +22,10 @@ namespace Multithreading
                 {
                     oldHead = _head;
                 }
-                
-                if (oldHead == -1)
-                    continue;
 
-                Interlocked.CompareExchange(ref _head, -1, oldHead);
-                _queue[oldHead] = e;
-                Interlocked.CompareExchange(ref _head, (oldHead + 1) % _queue.Length, -1);
+                if (Interlocked.CompareExchange(ref _queue[oldHead], new Boxed<T>(e), null) != null)
+                    continue;
+                _head = (_head + 1) % _queue.Length;
                 break;
             }
         }
@@ -43,14 +40,12 @@ namespace Multithreading
                     oldTail = _tail;
                 }
 
-                if (oldTail == -1)
-                    continue;
-
-                Interlocked.CompareExchange(ref _tail, -1, oldTail);
                 var res = _queue[oldTail];
-                _queue[oldTail] = default(T);
-                Interlocked.CompareExchange(ref _tail, (oldTail + 1) % _queue.Length, -1);
-                return res;
+
+                if (Interlocked.CompareExchange(ref _queue[oldTail], null, res) != res)
+                    continue;
+                _tail = (_tail + 1) % _queue.Length;
+                return res.Value;
             }
         }
 
@@ -62,13 +57,12 @@ namespace Multithreading
                 return false;
             }
 
-            if (oldTail == -1)
-                return false;
+            var res = _queue[oldTail];
 
-            Interlocked.CompareExchange(ref _tail, -1, oldTail);
-            e = _queue[oldTail];
-            _queue[oldTail] = default(T);
-            Interlocked.CompareExchange(ref _tail, (oldTail + 1) % _queue.Length, -1);
+            if (Interlocked.CompareExchange(ref _queue[oldTail], null, res) != res)
+                return false;
+            _tail = (_tail + 1) % _queue.Length;
+            e = res.Value;
             return true;
         }
 
@@ -80,17 +74,19 @@ namespace Multithreading
                 return false;
             }
 
-            if (oldHead == -1)
+            if (Interlocked.CompareExchange(ref _queue[oldHead], new Boxed<T>(e), null) != null)
                 return false;
-            Interlocked.CompareExchange(ref _head, -1, oldHead);
-            _queue[oldHead] = e;
-            Interlocked.CompareExchange(ref _head, (oldHead + 1) % _queue.Length, -1);
+            _head = (_head + 1) % _queue.Length;
             return true;
         }
 
         public void Clear()
         {
-            _head = _tail;
+            while (_tail != _head)
+            {
+                var v = default(T);
+                TryDequeue(ref v);
+            }
         }
     }
 }
