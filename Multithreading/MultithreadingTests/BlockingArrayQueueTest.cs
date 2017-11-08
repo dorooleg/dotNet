@@ -22,6 +22,7 @@ namespace MultithreadingTests
         [DataRow(typeof(LockBaseArrayQueue<int>))]
         [DataRow(typeof(NewLockBaseArrayQueue<int>))]
         [DataRow(typeof(LockFreeArrayQueue<int>))]
+        [DataRow(typeof(NewLockFreeArrayQueue<int>))]
         public void DequeueTest(Type clazz)
         {
             var queue = CreateInstanceQueue(clazz);
@@ -34,6 +35,7 @@ namespace MultithreadingTests
         [DataRow(typeof(LockBaseArrayQueue<int>))]
         [DataRow(typeof(NewLockBaseArrayQueue<int>))]
         [DataRow(typeof(LockFreeArrayQueue<int>))]
+        [DataRow(typeof(NewLockFreeArrayQueue<int>))]
         public void ClearTest(Type clazz)
         {
             var queue = CreateInstanceQueue(clazz);
@@ -51,6 +53,7 @@ namespace MultithreadingTests
         [DataRow(typeof(LockBaseArrayQueue<int>))]
         [DataRow(typeof(NewLockBaseArrayQueue<int>))]
         [DataRow(typeof(LockFreeArrayQueue<int>))]
+        [DataRow(typeof(NewLockFreeArrayQueue<int>))]
         public void TryDequeueTest(Type clazz)
         {
             var queue = CreateInstanceQueue(clazz);
@@ -66,6 +69,7 @@ namespace MultithreadingTests
         [DataRow(typeof(LockBaseArrayQueue<int>))]
         [DataRow(typeof(NewLockBaseArrayQueue<int>))]
         [DataRow(typeof(LockFreeArrayQueue<int>))]
+        [DataRow(typeof(NewLockFreeArrayQueue<int>))]
         public void WaitDequeueTest(Type clazz)
         {
             var queue = CreateInstanceQueue(clazz);
@@ -81,6 +85,7 @@ namespace MultithreadingTests
         [DataRow(typeof(LockBaseArrayQueue<int>))]
         [DataRow(typeof(NewLockBaseArrayQueue<int>))]
         [DataRow(typeof(LockFreeArrayQueue<int>))]
+        [DataRow(typeof(NewLockFreeArrayQueue<int>))]
         public void MultipleThreadsTest(Type clazz)
         {
             var queue = CreateInstanceQueue(clazz);
