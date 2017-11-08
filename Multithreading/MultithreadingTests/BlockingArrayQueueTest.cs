@@ -10,24 +10,33 @@ namespace MultithreadingTests
     [TestClass]
     public class LockBaseArrayQueueTest
     {
+        private IBlockingArrayQueue<int> CreateInstanceQueue(Type clazz)
+        {
+            var count = clazz.GetConstructors()[0].GetParameters().Length;
+            return count == 0 ? (IBlockingArrayQueue<int>)Activator.CreateInstance(clazz)
+                : (IBlockingArrayQueue<int>)Activator.CreateInstance(clazz, 20);
+        }
+
         [DataTestMethod]
-        [Timeout(3000)]
+        [Timeout(50000)]
         [DataRow(typeof(LockBaseArrayQueue<int>))]
+        [DataRow(typeof(NewLockBaseArrayQueue<int>))]
         [DataRow(typeof(LockFreeArrayQueue<int>))]
         public void DequeueTest(Type clazz)
         {
-            var queue = (IBlockingArrayQueue<int>) Activator.CreateInstance(clazz);
+            var queue = CreateInstanceQueue(clazz);
             queue.Enqueue(5);
             Assert.AreEqual(5, queue.Dequeue());
         }
 
         [DataTestMethod]
-        [Timeout(3000)]
+        [Timeout(50000)]
         [DataRow(typeof(LockBaseArrayQueue<int>))]
+        [DataRow(typeof(NewLockBaseArrayQueue<int>))]
         [DataRow(typeof(LockFreeArrayQueue<int>))]
         public void ClearTest(Type clazz)
         {
-            var queue = (IBlockingArrayQueue<int>) Activator.CreateInstance(clazz);
+            var queue = CreateInstanceQueue(clazz);
             queue.Enqueue(5);
             queue.Enqueue(3);
             queue.Enqueue(17);
@@ -38,12 +47,13 @@ namespace MultithreadingTests
         }
 
         [DataTestMethod]
-        [Timeout(3000)]
+        [Timeout(50000)]
         [DataRow(typeof(LockBaseArrayQueue<int>))]
+        [DataRow(typeof(NewLockBaseArrayQueue<int>))]
         [DataRow(typeof(LockFreeArrayQueue<int>))]
         public void TryDequeueTest(Type clazz)
         {
-            var queue = (IBlockingArrayQueue<int>) Activator.CreateInstance(clazz);
+            var queue = CreateInstanceQueue(clazz);
             queue.Enqueue(5);
             var res = 0;
             Assert.IsTrue(queue.TryDequeue(ref res));
@@ -52,34 +62,36 @@ namespace MultithreadingTests
         }
 
         [DataTestMethod]
-        [Timeout(3000)]
+        [Timeout(50000)]
         [DataRow(typeof(LockBaseArrayQueue<int>))]
+        [DataRow(typeof(NewLockBaseArrayQueue<int>))]
         [DataRow(typeof(LockFreeArrayQueue<int>))]
         public void WaitDequeueTest(Type clazz)
         {
-            var queue = (IBlockingArrayQueue<int>) Activator.CreateInstance(clazz);
-            var wait = Task.Run(() => { Assert.AreEqual(10, queue.Dequeue()); });
+            var queue = CreateInstanceQueue(clazz);
+            var wait = Task.Factory.StartNew(() => { Assert.AreEqual(10, queue.Dequeue()); });
             Thread.Sleep(1000);
-            var notify = Task.Run(() => { queue.Enqueue(10); });
+            var notify = Task.Factory.StartNew(() => { queue.Enqueue(10); });
             wait.Wait();
             notify.Wait();
         }
 
         [DataTestMethod]
-        [Timeout(3000)]
+        [Timeout(50000)]
         [DataRow(typeof(LockBaseArrayQueue<int>))]
+        [DataRow(typeof(NewLockBaseArrayQueue<int>))]
         [DataRow(typeof(LockFreeArrayQueue<int>))]
         public void MultipleThreadsTest(Type clazz)
         {
-            var queue = (IBlockingArrayQueue<int>) Activator.CreateInstance(clazz);
+            var queue = CreateInstanceQueue(clazz);
             var listInserters = Enumerable
-                .Range(0, 1000)
-                .Select(x => Task.Run(() => queue.Enqueue(x)))
+                .Range(0, 39)
+                .Select(x => Task.Factory.StartNew(() => queue.Enqueue(x)))
                 .ToList();
 
             var listRemovers = Enumerable
-                .Range(0, 1000)
-                .Select(x => Task.Run(() => queue.Dequeue()))
+                .Range(0, 20)
+                .Select(x => Task.Factory.StartNew(() => queue.Dequeue()))
                 .ToList();
 
             listInserters.ForEach(t => t.Wait());

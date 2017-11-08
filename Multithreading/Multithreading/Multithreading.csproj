@@ -52,6 +52,7 @@
     <Compile Include="ImmutableStack.cs" />
     <Compile Include="LockBaseArrayQueue.cs" />
     <Compile Include="LockFreeArrayQueue.cs" />
+    <Compile Include="NewLockBaseArrayQueue.cs" />
     <Compile Include="Philosopher.cs" />
     <Compile Include="Philosophers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
