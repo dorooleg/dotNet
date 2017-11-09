@@ -44,7 +44,7 @@ namespace Multithreading
             {
                 if (ToIndex(_head) == ToIndex(_tail))
                     return false;
-                e = _queue[_tail++];
+                e = _queue[ToIndex(_tail++)];
                 Monitor.PulseAll(_mutex);
                 return true;
             }
