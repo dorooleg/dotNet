@@ -10,7 +10,7 @@ namespace MultithreadingTests
     [TestClass]
     public class LockBaseArrayQueueTest
     {
-        private IBlockingArrayQueue<int> CreateInstanceQueue(Type clazz)
+        private static IBlockingArrayQueue<int> CreateInstanceQueue(Type clazz)
         {
             var count = clazz.GetConstructors()[0].GetParameters().Length;
             return count == 0

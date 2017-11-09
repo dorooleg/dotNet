@@ -4,81 +4,81 @@ namespace Multithreading
 {
     public class NewLockFreeArrayQueue<T> : IBlockingArrayQueue<T>
     {
-        private readonly Boxed<T>[] _queue;
+        private readonly T[] _queue;
         private int _head;
+        private int _maxHead;
         private int _tail;
 
         public NewLockFreeArrayQueue(int n)
         {
-            _queue = new Boxed<T>[n];
+            _queue = new T[n];
         }
 
         public void Enqueue(T e)
         {
-            while (true)
+            while (!TryEnqueue(e))
             {
-                var oldHead = _head;
-                while ((oldHead + 1) % _queue.Length == _tail)
-                    oldHead = _head;
-
-                if (Interlocked.CompareExchange(ref _queue[oldHead], new Boxed<T>(e), null) != null)
-                    continue;
-                _head = (_head + 1) % _queue.Length;
-                break;
+                Thread.Yield();
             }
         }
 
         public T Dequeue()
         {
-            while (true)
+            var ret = default(T);
+            while (!TryDequeue(ref ret))
             {
-                var oldTail = _tail;
-                while (_head == _tail)
-                    oldTail = _tail;
-
-                var res = _queue[oldTail];
-
-                if (Interlocked.CompareExchange(ref _queue[oldTail], null, res) != res)
-                    continue;
-                _tail = (_tail + 1) % _queue.Length;
-                return res.Value;
+                Thread.Yield();
             }
+            return ret;
         }
 
         public bool TryDequeue(ref T e)
         {
-            var oldTail = _tail;
-            if (_head == _tail)
-                return false;
+            do
+            {
+                var tail = _tail;
+                var maxHead = _maxHead;
 
-            var res = _queue[oldTail];
+                if (ToIndex(tail) == ToIndex(maxHead))
+                    return false;
 
-            if (Interlocked.CompareExchange(ref _queue[oldTail], null, res) != res)
-                return false;
-            _tail = (_tail + 1) % _queue.Length;
-            e = res.Value;
-            return true;
+                e = _queue[ToIndex(tail)];
+
+                if (Interlocked.CompareExchange(ref _tail, tail + 1, tail) == tail)
+                    return true;
+            } while (true);
         }
 
         public bool TryEnqueue(T e)
         {
-            var oldHead = _head;
-            if ((oldHead + 1) % _queue.Length == _tail)
-                return false;
+            int head;
 
-            if (Interlocked.CompareExchange(ref _queue[oldHead], new Boxed<T>(e), null) != null)
-                return false;
-            _head = (_head + 1) % _queue.Length;
+            do
+            {
+                head = _head;
+                var tail = _tail;
+
+                while (ToIndex(head + 1) == ToIndex(tail))
+                    return false;
+
+                _queue[ToIndex(head)] = e;
+            } while (Interlocked.CompareExchange(ref _head, head + 1, head) != head);
+
+            while (Interlocked.CompareExchange(ref _maxHead, head + 1, head) != head)
+                Thread.Yield();
+
             return true;
         }
 
         public void Clear()
         {
-            while (_tail != _head)
+            while (ToIndex(_tail) != ToIndex(_head))
             {
                 var v = default(T);
                 TryDequeue(ref v);
             }
         }
+
+        private int ToIndex(int c) => c % _queue.Length;
     }
 }

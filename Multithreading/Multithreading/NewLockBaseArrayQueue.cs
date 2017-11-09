@@ -16,40 +16,35 @@ namespace Multithreading
 
         public void Enqueue(T e)
         {
-            lock (_mutex)
+            while (!TryEnqueue(e))
             {
-                while ((_head + 1) % _queue.Length == _tail)
+                lock (_mutex)
+                {
                     Monitor.Wait(_mutex);
-
-                _queue[_head] = e;
-                _head = (_head + 1) % _queue.Length;
-                Monitor.PulseAll(_mutex);
+                }
             }
         }
 
         public T Dequeue()
         {
-            lock (_mutex)
+            var ret = default(T);
+            while (!TryDequeue(ref ret))
             {
-                while (_head == _tail)
+                lock (_mutex)
+                {
                     Monitor.Wait(_mutex);
-                var res = _queue[_tail];
-                _queue[_tail] = default(T);
-                _tail = (_tail + 1) % _queue.Length;
-                Monitor.PulseAll(_mutex);
-                return res;
+                }
             }
+            return ret;
         }
 
         public bool TryDequeue(ref T e)
         {
             lock (_mutex)
             {
-                if (_head == _tail)
+                if (ToIndex(_head) == ToIndex(_tail))
                     return false;
-                e = _queue[_tail];
-                _queue[_tail] = default(T);
-                _tail = (_tail + 1) % _queue.Length;
+                e = _queue[_tail++];
                 Monitor.PulseAll(_mutex);
                 return true;
             }
@@ -59,11 +54,9 @@ namespace Multithreading
         {
             lock (_mutex)
             {
-                if ((_head + 1) % _queue.Length == _tail)
+                if (ToIndex(_head + 1) == ToIndex(_tail))
                     return false;
-
-                _queue[_head] = e;
-                _head = (_head + 1) % _queue.Length;
+                _queue[ToIndex(_head++)] = e;
                 Monitor.PulseAll(_mutex);
                 return true;
             }
@@ -76,5 +69,7 @@ namespace Multithreading
                 _tail = _head = 0;
             }
         }
+
+        private int ToIndex(int c) => c % _queue.Length;
     }
 }
