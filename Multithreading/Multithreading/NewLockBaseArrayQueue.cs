@@ -9,10 +9,7 @@ namespace Multithreading
         private int _head;
         private int _tail;
 
-        public NewLockBaseArrayQueue(int n)
-        {
-            _queue = new T[n];
-        }
+        public NewLockBaseArrayQueue(int n) => _queue = new T[n];
 
         public void Enqueue(T e)
         {
@@ -43,7 +40,9 @@ namespace Multithreading
             lock (_mutex)
             {
                 if (ToIndex(_head) == ToIndex(_tail))
+                {
                     return false;
+                }
                 e = _queue[ToIndex(_tail++)];
                 Monitor.PulseAll(_mutex);
                 return true;
@@ -55,7 +54,9 @@ namespace Multithreading
             lock (_mutex)
             {
                 if (ToIndex(_head + 1) == ToIndex(_tail))
+                {
                     return false;
+                }
                 _queue[ToIndex(_head++)] = e;
                 Monitor.PulseAll(_mutex);
                 return true;

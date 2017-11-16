@@ -15,7 +15,10 @@ namespace Multithreading
 
         private static void Refill(ref ImmutableStack<T> o, ref ImmutableStack<T> i)
         {
-            if (!o.IsEmpty) return;
+            if (!o.IsEmpty)
+            {
+                return;
+            }
 
             while (!i.IsEmpty)
             {
@@ -38,16 +41,16 @@ namespace Multithreading
 
             Refill(ref o, ref i);
 
-            if (!o.IsEmpty) return new ImmutableQueue<T>(i, o.Pop(out res));
+            if (!o.IsEmpty)
+            {
+                return new ImmutableQueue<T>(i, o.Pop(out res));
+            }
             res = default(T);
             return this;
         }
 
         [Pure]
-        public ImmutableQueue<T> Enqueue(T res)
-        {
-            return new ImmutableQueue<T>(_incoming.Push(res), _outgoing);
-        }
+        public ImmutableQueue<T> Enqueue(T res) => new ImmutableQueue<T>(_incoming.Push(res), _outgoing);
 
         #endregion
     }

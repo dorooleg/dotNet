@@ -23,7 +23,9 @@ namespace Multithreading
             lock (_mutex)
             {
                 while (_in.Count == 0 && _out.Count == 0)
+                {
                     Monitor.Wait(_mutex);
+                }
 
                 if (_out.Count == 0)
                 {
@@ -48,7 +50,9 @@ namespace Multithreading
                 }
 
                 if (_out.Count == 0)
+                {
                     return false;
+                }
 
                 var last = _out[_out.Count - 1];
                 _out.RemoveAt(_out.Count - 1);

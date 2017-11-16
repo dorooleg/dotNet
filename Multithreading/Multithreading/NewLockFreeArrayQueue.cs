@@ -9,10 +9,7 @@ namespace Multithreading
         private int _maxHead;
         private int _tail;
 
-        public NewLockFreeArrayQueue(int n)
-        {
-            _queue = new T[n];
-        }
+        public NewLockFreeArrayQueue(int n) => _queue = new T[n];
 
         public void Enqueue(T e)
         {
@@ -40,12 +37,16 @@ namespace Multithreading
                 var maxHead = _maxHead;
 
                 if (ToIndex(tail) == ToIndex(maxHead))
+                {
                     return false;
+                }
 
                 e = _queue[ToIndex(tail)];
 
                 if (Interlocked.CompareExchange(ref _tail, tail + 1, tail) == tail)
+                {
                     return true;
+                }
             } while (true);
         }
 
@@ -59,13 +60,17 @@ namespace Multithreading
                 var tail = _tail;
 
                 while (ToIndex(head + 1) == ToIndex(tail))
+                {
                     return false;
+                }
 
                 _queue[ToIndex(head)] = e;
             } while (Interlocked.CompareExchange(ref _head, head + 1, head) != head);
 
             while (Interlocked.CompareExchange(ref _maxHead, head + 1, head) != head)
+            {
                 Thread.Yield();
+            }
 
             return true;
         }

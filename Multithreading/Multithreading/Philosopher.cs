@@ -17,7 +17,9 @@ namespace Multithreading
             _rightHand = rightHand;
 
             if (_leftHand.GetId > _rightHand.GetId)
+            {
                 (_leftHand, _rightHand) = (_rightHand, _leftHand);
+            }
         }
 
         public uint GetId { get; } = _globalId++;

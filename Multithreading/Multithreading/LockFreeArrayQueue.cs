@@ -12,7 +12,10 @@ namespace Multithreading
             {
                 var q = _queue;
                 var @new = Boxed.Of(q.Value.Enqueue(e));
-                if (Interlocked.CompareExchange(ref _queue, @new, q) == q) return;
+                if (Interlocked.CompareExchange(ref _queue, @new, q) == q)
+                {
+                    return;
+                }
             }
         }
 
@@ -22,9 +25,14 @@ namespace Multithreading
             {
                 var q = _queue;
                 while (q.Value.IsEmpty)
+                {
                     q = _queue;
+                }
                 var @new = Boxed.Of(q.Value.Dequeue(out var res));
-                if (Interlocked.CompareExchange(ref _queue, @new, q) == q) return res;
+                if (Interlocked.CompareExchange(ref _queue, @new, q) == q)
+                {
+                    return res;
+                }
             }
         }
 
@@ -37,7 +45,10 @@ namespace Multithreading
                 return false;
             }
             var @new = Boxed.Of(q.Value.Dequeue(out var res));
-            if (Interlocked.CompareExchange(ref _queue, @new, q) != q) return false;
+            if (Interlocked.CompareExchange(ref _queue, @new, q) != q)
+            {
+                return false;
+            }
             e = res;
             return true;
         }
@@ -55,7 +66,10 @@ namespace Multithreading
             {
                 var q = _queue;
                 var @new = Boxed.Of(new ImmutableQueue<T>());
-                if (Interlocked.CompareExchange(ref _queue, @new, q) == q) return;
+                if (Interlocked.CompareExchange(ref _queue, @new, q) == q)
+                {
+                    return;
+                }
             }
         }
     }

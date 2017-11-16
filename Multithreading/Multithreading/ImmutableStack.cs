@@ -19,10 +19,7 @@ namespace Multithreading
 
         private readonly Entry _head;
 
-        private ImmutableStack(Entry head)
-        {
-            _head = head;
-        }
+        private ImmutableStack(Entry head) => _head = head;
 
 
         #region API
@@ -31,15 +28,15 @@ namespace Multithreading
         public bool IsEmpty => _head == null;
 
         [Pure]
-        public ImmutableStack<T> Push(T value)
-        {
-            return new ImmutableStack<T>(new Entry(value, _head));
-        }
+        public ImmutableStack<T> Push(T value) => new ImmutableStack<T>(new Entry(value, _head));
 
         [Pure]
         public ImmutableStack<T> Pop(out T value)
         {
-            if (_head == null) throw new InvalidOperationException("head is null");
+            if (_head == null)
+            {
+                throw new InvalidOperationException("head is null");
+            }
             value = _head.Value;
             return new ImmutableStack<T>(_head.Next);
         }
