@@ -1,8 +1,5 @@
-﻿using System.IO;
-using System.Reflection;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Roguelike;
-using Assert = Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 
 namespace RoguelikeTest
 {
@@ -22,7 +19,7 @@ namespace RoguelikeTest
         {
             var world = new World(filename);
             Assert.IsFalse(world.Validate());
-        } 
+        }
 
         [TestMethod]
         public void Origin()

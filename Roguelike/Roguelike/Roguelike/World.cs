@@ -41,12 +41,13 @@ namespace Roguelike
         }
 
         private static bool Validate([NotNull] List<char[]> map) => map.Count > 0 && map[0].Length > 0
-                                                          && map.TrueForAll(x => x.Length == map[0].Length)
-                                                          && map[0].All(x => x == Wall)
-                                                          && map[map.Count - 1].All(x => x == Wall)
-                                                          && map.TrueForAll(x => x[0] == Wall)
-                                                          && map.TrueForAll(x => x[x.Length - 1] == Wall)
-                                                          && map.Select(x => x.Count(y => y == Player)).Sum() == 1;
+                                                                    && map.TrueForAll(x => x.Length == map[0].Length)
+                                                                    && map[0].All(x => x == Wall)
+                                                                    && map[map.Count - 1].All(x => x == Wall)
+                                                                    && map.TrueForAll(x => x[0] == Wall)
+                                                                    && map.TrueForAll(x => x[x.Length - 1] == Wall)
+                                                                    && map.Select(x => x.Count(y => y == Player))
+                                                                        .Sum() == 1;
 
         public void MoveTo((int dx, int dy) offset)
         {
