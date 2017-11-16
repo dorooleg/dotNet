@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using JetBrains.Annotations;
-using NUnit.Framework;
 
 namespace Roguelike
 {
@@ -16,16 +15,32 @@ namespace Roguelike
 
         public World([NotNull] string filename)
         {
-            _map = File.ReadAllLines(filename).Select(x => x.ToCharArray()).ToList();
-            if (!Validate(_map))
+            try
             {
-                throw new InvalidDataException();
+                _map = File.ReadAllLines(filename).Select(x => x.ToCharArray()).ToList();
             }
-
-            _map.ForEach(Console.WriteLine);
+            catch (IOException)
+            {
+            }
         }
 
-        private static bool Validate(List<char[]> map) => map.Count > 0 && map[0].Length > 0
+        public (int x, int y) PlayerPosition { get; private set; }
+
+        public bool Validate()
+        {
+            if (_map == null || !Validate(_map))
+            {
+                return false;
+            }
+
+            var playerX = _map.FindIndex(x => x.Contains(Player));
+            var playerY = Array.FindIndex(_map[playerX], w => w == Player);
+            PlayerPosition = (playerX, playerY);
+            _map.ForEach(Console.WriteLine);
+            return true;
+        }
+
+        private static bool Validate([NotNull] List<char[]> map) => map.Count > 0 && map[0].Length > 0
                                                           && map.TrueForAll(x => x.Length == map[0].Length)
                                                           && map[0].All(x => x == Wall)
                                                           && map[map.Count - 1].All(x => x == Wall)
@@ -33,32 +48,29 @@ namespace Roguelike
                                                           && map.TrueForAll(x => x[x.Length - 1] == Wall)
                                                           && map.Select(x => x.Count(y => y == Player)).Sum() == 1;
 
-        private int GetPlayerX() => _map.FindIndex(x => x.Contains(Player));
-
-        private int GetPlayerY() => Array.FindIndex(_map[GetPlayerX()], w => w == Player);
-
-        public void MoveTo(int dx, int dy)
+        public void MoveTo((int dx, int dy) offset)
         {
-            Assert.LessOrEqual(dx, 1);
-            Assert.GreaterOrEqual(dx, -1);
-            Assert.LessOrEqual(dy, 1);
-            Assert.GreaterOrEqual(dy, -1);
-
-            var x = GetPlayerX();
-            var y = GetPlayerY();
+            var (dx, dy) = offset;
+            var x = PlayerPosition.x;
+            var y = PlayerPosition.y;
             var newX = x + dx;
             var newY = y + dy;
-            if (_map[newX][newY] == Wall)
-                return;
 
-            _map[x][y] = Empty;
-            _map[newX][newY] = Player;
+            if (_map[newX][newY] == Wall)
+            {
+                return;
+            }
 
             Update(x, y, newX, newY);
         }
 
         private void Update(int x, int y, int newX, int newY)
         {
+            _map[x][y] = Empty;
+            _map[newX][newY] = Player;
+
+            PlayerPosition = (newX, newY);
+
             Console.SetCursorPosition(y, x);
             Console.Write(Empty);
             Console.SetCursorPosition(newY, newX);
