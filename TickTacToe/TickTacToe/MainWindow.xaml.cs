@@ -12,6 +12,7 @@ namespace TickTacToe
     /// </summary>
     public partial class MainWindow
     {
+        private static readonly Action EmptyDelegate = delegate { };
         private readonly Button[,] _buttons = new Button[GameBoard.Size, GameBoard.Size];
         private readonly Statistics _statistics = new Statistics();
         private GameBoard _board = new GameBoard();
@@ -34,15 +35,15 @@ namespace TickTacToe
                     _buttons[x1, y1].Content = (char) _board.GetElement(x1, y1);
                     _buttons[x1, y1].Dispatcher.Invoke(DispatcherPriority.Render, EmptyDelegate);
                     if (_task != null)
+                    {
                         Task.WaitAll(_task);
+                    }
                 };
 
                 ButtonsGrid.Children.Add(_buttons[x, y]);
             }
             UpdateStatistics();
         }
-
-        private static readonly Action EmptyDelegate = delegate { };
 
         private void Exit_OnClick(object sender, RoutedEventArgs e)
         {
@@ -51,21 +52,30 @@ namespace TickTacToe
 
         private bool CheckDraw()
         {
-            if (!_board.Draw) return false;
+            if (!_board.Draw)
+            {
+                return false;
+            }
             _task = Task.Run(() => MessageBox.Show("Draw"));
             return true;
         }
 
         private bool CheckWinX()
         {
-            if (!_board.WinX) return false;
+            if (!_board.WinX)
+            {
+                return false;
+            }
             _task = Task.Run(() => MessageBox.Show("Win X"));
             return true;
         }
 
         private bool CheckWinO()
         {
-            if (!_board.WinO) return false;
+            if (!_board.WinO)
+            {
+                return false;
+            }
             _task = Task.Run(() => MessageBox.Show("Win O"));
             return true;
         }
@@ -76,8 +86,14 @@ namespace TickTacToe
             _board = new GameBoard();
             _first = new Player(_board, r =>
             {
-                if (!r) return;
-                if (!_board.EndGame) return;
+                if (!r)
+                {
+                    return;
+                }
+                if (!_board.EndGame)
+                {
+                    return;
+                }
                 CheckDraw();
                 CheckWinO();
                 CheckWinX();
@@ -103,20 +119,32 @@ namespace TickTacToe
             _second = robot;
             _first = new Player(_board, r =>
             {
-                if (!r) return;
+                if (!r)
+                {
+                    return;
+                }
 
                 _second.Update(0, 0);
 
-                if (!_board.EndGame) return;
+                if (!_board.EndGame)
+                {
+                    return;
+                }
 
                 if (CheckDraw())
+                {
                     _statistics.CountDraw += 1;
+                }
 
                 if (CheckWinO())
+                {
                     _statistics.CountLose += 1;
+                }
 
                 if (CheckWinX())
+                {
                     _statistics.CountWin += 1;
+                }
 
                 UpdateStatistics();
             });

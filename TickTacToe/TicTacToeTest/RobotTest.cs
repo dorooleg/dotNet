@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TickTacToe;
 
 namespace TicTacToeTest
@@ -18,12 +17,8 @@ namespace TicTacToeTest
             Assert.AreEqual(2, i);
             var result = false;
             for (var x = 0; x < GameBoard.Size; x++)
-            {
-                for (var y = 0; y < GameBoard.Size; y++)
-                {
-                    result = result || board.GetElement(x, y) == GameBoard.BoardElement.X;
-                }
-            }
+            for (var y = 0; y < GameBoard.Size; y++)
+                result = result || board.GetElement(x, y) == GameBoard.BoardElement.X;
             Assert.IsTrue(result);
         }
 
@@ -38,12 +33,8 @@ namespace TicTacToeTest
             Assert.AreEqual(2, i);
             var result = false;
             for (var x = 0; x < GameBoard.Size; x++)
-            {
-                for (var y = 0; y < GameBoard.Size; y++)
-                {
-                    result = result || board.GetElement(x, y) == GameBoard.BoardElement.X;
-                }
-            }
+            for (var y = 0; y < GameBoard.Size; y++)
+                result = result || board.GetElement(x, y) == GameBoard.BoardElement.X;
             Assert.IsTrue(result);
         }
     }

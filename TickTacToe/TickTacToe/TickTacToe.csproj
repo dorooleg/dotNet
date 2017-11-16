@@ -60,6 +60,9 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="EasyRobot.cs" />
+    <Compile Include="MediumRobot.cs" />
+    <Compile Include="Player.cs" />
     <Compile Include="Statistics.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>

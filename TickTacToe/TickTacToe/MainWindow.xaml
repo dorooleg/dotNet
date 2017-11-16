@@ -23,12 +23,12 @@
             <Grid DockPanel.Dock="Top" Name="Statistics" Visibility="Collapsed">
                 <DockPanel>
                     <DockPanel DockPanel.Dock="Left">
-                    <Label Content="Win: "  />
-                    <Label Content="" Name="CountWin" />
+                        <Label Content="Win: " />
+                        <Label Content="" Name="CountWin" />
                     </DockPanel>
                     <DockPanel DockPanel.Dock="Left">
-                        <Label Content="Lose: "  />
-                        <Label Content="" Name="CountLose"  />
+                        <Label Content="Lose: " />
+                        <Label Content="" Name="CountLose" />
                     </DockPanel>
                     <DockPanel DockPanel.Dock="Left">
                         <Label Content="Draw: " />
@@ -36,8 +36,7 @@
                     </DockPanel>
                 </DockPanel>
             </Grid>
-            <UniformGrid Name="ButtonsGrid">
-            </UniformGrid>
+            <UniformGrid Name="ButtonsGrid" />
         </DockPanel>
     </Grid>
 

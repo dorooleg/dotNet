@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
 
 namespace TickTacToe
 {
@@ -17,7 +16,7 @@ namespace TickTacToe
 
         private readonly List<BoardElement[]> _board =
             new List<BoardElement[]>(from int i in Enumerable.Range(0, Size)
-                select Enumerable.Range(0, Size).Select(_ => BoardElement._).ToArray());
+                                     select Enumerable.Range(0, Size).Select(_ => BoardElement._).ToArray());
 
         private BoardElement _currentElement = BoardElement.X;
 
@@ -26,24 +25,13 @@ namespace TickTacToe
         public bool Draw { get; set; }
         public bool EndGame { get; set; }
 
-        private static void Validate(int x, int y)
-        {
-            Assert.Less(x, Size);
-            Assert.Less(y, Size);
-            Assert.GreaterOrEqual(x, 0);
-            Assert.GreaterOrEqual(y, 0);
-        }
-
         public BoardElement GetElement(int x, int y)
         {
-            Validate(x, y);
             return _board[x][y];
         }
 
         public bool Update(int x, int y)
         {
-            Validate(x, y);
-
             if (EndGame || _board[x][y] != BoardElement._)
             {
                 return false;
@@ -77,10 +65,10 @@ namespace TickTacToe
 
         public bool IfSetThenEnd(int x, int y)
         {
-            Validate(x, y);
-
             if (EndGame)
+            {
                 return true;
+            }
 
             if (_board[x][y] != BoardElement._)
             {
@@ -96,7 +84,7 @@ namespace TickTacToe
 
         public List<(int, int)> GetListEmpty()
             => Enumerable.Range(0, Size)
-                    .SelectMany(x => Enumerable.Range(0, Size)
+                .SelectMany(x => Enumerable.Range(0, Size)
                     .Where(y => _board[x][y] == BoardElement._)
                     .Select(y => (x, y))).ToList();
 
@@ -109,10 +97,10 @@ namespace TickTacToe
         }
 
         private bool CheckWin(BoardElement element)
-                => Enumerable.Range(0, Size).Any(i => _board[i].All(x => x == element)) ||
-                   Enumerable.Range(0, Size).Any(i => _board.TrueForAll(x => x[i] == element)) ||
-                   Enumerable.Range(0, Size).All(i => _board[i][i] == element) ||
-                   Enumerable.Range(0, Size).All(i => _board[i][Size - i - 1] == element);
+            => Enumerable.Range(0, Size).Any(i => _board[i].All(x => x == element)) ||
+               Enumerable.Range(0, Size).Any(i => _board.TrueForAll(x => x[i] == element)) ||
+               Enumerable.Range(0, Size).All(i => _board[i][i] == element) ||
+               Enumerable.Range(0, Size).All(i => _board[i][Size - i - 1] == element);
 
         private void UpdateWinX()
             => WinX = CheckWin(BoardElement.X);

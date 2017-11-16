@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TickTacToe;
 
 namespace TicTacToeTest
@@ -19,12 +18,8 @@ namespace TicTacToeTest
         public void EmptyTest()
         {
             for (var x = 0; x < GameBoard.Size; x++)
-            {
-                for (var y = 0; y < GameBoard.Size; y++)
-                {
-                    Assert.AreEqual(GameBoard.BoardElement._, _board.GetElement(x, y));
-                }
-            }
+            for (var y = 0; y < GameBoard.Size; y++)
+                Assert.AreEqual(GameBoard.BoardElement._, _board.GetElement(x, y));
         }
 
         [TestMethod]
