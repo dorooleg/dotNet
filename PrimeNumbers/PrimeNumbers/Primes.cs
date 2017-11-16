@@ -6,7 +6,10 @@
         {
             for (var i = 2; i * i <= thіs; i++)
             {
-                if (thіs % i == 0) return false;
+                if (thіs % i == 0)
+                {
+                    return false;
+                }
             }
 
             return true;

@@ -35,7 +35,9 @@ namespace PrimeNumbers
         private void ListView_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             if (!(sender is ListView listView))
+            {
                 return;
+            }
 
             listView.UpdateLayout();
             UpdateColumnsWidth(listView);
@@ -44,11 +46,15 @@ namespace PrimeNumbers
         private static void UpdateColumnsWidth(ListView listView)
         {
             if (!(listView.View is GridView grid))
+            {
                 return;
+            }
 
             var autoFillColumnIndex = grid.Columns.Count - 1;
             if (double.IsNaN(listView.ActualWidth))
+            {
                 listView.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            }
             var remainingSpace = grid.Columns.Where((t, i) => i != autoFillColumnIndex)
                 .Aggregate(listView.ActualWidth, (current, t) => current - t.ActualWidth);
             grid.Columns[autoFillColumnIndex].Width = Math.Max(remainingSpace - 30, 0);
@@ -57,7 +63,9 @@ namespace PrimeNumbers
         private void ButtonOk_OnClick(object sender, RoutedEventArgs e)
         {
             if (XInput.Text.Length == 0)
+            {
                 return;
+            }
 
             var cts = new CancellationTokenSource();
 
@@ -77,7 +85,7 @@ namespace PrimeNumbers
             LvPrimesNumbers.Items.Add(row);
 
 
-            Task.Factory.StartNew(() =>
+            Task.Run(() =>
             {
                 if (cts.IsCancellationRequested)
                 {

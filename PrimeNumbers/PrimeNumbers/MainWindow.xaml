@@ -12,7 +12,8 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Horizontal">
-            <TextBox Name="XInput" Width="100" PreviewTextInput="NumberValidationTextBox" MaxLength="7" VerticalAlignment="Center"
+            <TextBox Name="XInput" Width="100" PreviewTextInput="NumberValidationTextBox" MaxLength="7"
+                     VerticalAlignment="Center"
                      Margin="10" />
             <Button Width="50" VerticalAlignment="Center" Content="Ok" Margin="10" Click="ButtonOk_OnClick" />
         </StackPanel>
@@ -35,7 +36,7 @@
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    
+
                     <GridViewColumn Header="Result" Width="80">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
@@ -47,11 +48,12 @@
                     <GridViewColumn Header="Cancel" Width="80">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>
-                                <Button Tag="{Binding Id}"  Content="Cancel" IsEnabled="{Binding CancelEnabled}" Click="ButtonCancel_OnClick"/>
+                                <Button Tag="{Binding Id}" Content="Cancel" IsEnabled="{Binding CancelEnabled}"
+                                        Click="ButtonCancel_OnClick" />
                             </DataTemplate>
                         </GridViewColumn.CellTemplate>
                     </GridViewColumn>
-                    
+
                     <GridViewColumn Header="Progress">
                         <GridViewColumn.CellTemplate>
                             <DataTemplate>

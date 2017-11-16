@@ -2,16 +2,15 @@
 {
     public class Range
     {
-        public readonly int From;
         public readonly int Count;
+        public readonly int From;
 
-        public int ToExclusive => From + Count;
-
-        public Range(int @from, int count)
+        public Range(int from, int count)
         {
-            From = @from;
+            From = from;
             Count = count;
         }
 
+        public int ToExclusive => From + Count;
     }
 }
