@@ -43,8 +43,7 @@ type Expression =
     | Div of Expression * Expression
     | Mod of Expression * Expression
 
-let rec Evaluate expr =
-    match expr with
+let rec Evaluate = function
     | Number n -> n
     | Add (x, y) -> Evaluate x + Evaluate y
     | Sub (x, y) -> Evaluate x - Evaluate y
