@@ -7,6 +7,7 @@ namespace Multithreading
         private readonly T[] _queue;
         private int _head;
         private int _maxHead;
+        private SpinWait _spinner = new SpinWait();
         private int _tail;
 
         public NewLockFreeArrayQueue(int n) => _queue = new T[n];
@@ -15,21 +16,21 @@ namespace Multithreading
         {
             while (!TryEnqueue(e))
             {
-                Thread.Yield();
+                _spinner.SpinOnce();
             }
         }
 
         public T Dequeue()
         {
-            var ret = default(T);
-            while (!TryDequeue(ref ret))
+            T ret;
+            while (!TryDequeue(out ret))
             {
-                Thread.Yield();
+                _spinner.SpinOnce();
             }
             return ret;
         }
 
-        public bool TryDequeue(ref T e)
+        public bool TryDequeue(out T e)
         {
             do
             {
@@ -38,6 +39,7 @@ namespace Multithreading
 
                 if (ToIndex(tail) == ToIndex(maxHead))
                 {
+                    e = default(T);
                     return false;
                 }
 
@@ -79,8 +81,7 @@ namespace Multithreading
         {
             while (ToIndex(_tail) != ToIndex(_head))
             {
-                var v = default(T);
-                TryDequeue(ref v);
+                TryDequeue(out _);
             }
         }
 

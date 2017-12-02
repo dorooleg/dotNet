@@ -1,20 +1,20 @@
-﻿using System.Collections;
+﻿using System.Collections.Generic;
 using System.Threading;
 
 namespace Multithreading
 {
     public class LockBaseArrayQueue<T> : IBlockingArrayQueue<T>
     {
-        private readonly ArrayList _in = new ArrayList();
+        private readonly List<T> _in = new List<T>();
         private readonly object _mutex = new object();
-        private readonly ArrayList _out = new ArrayList();
+        private readonly List<T> _out = new List<T>();
 
         public void Enqueue(T e)
         {
             lock (_mutex)
             {
                 _in.Add(e);
-                Monitor.PulseAll(_mutex);
+                Monitor.Pulse(_mutex);
             }
         }
 
@@ -35,11 +35,11 @@ namespace Multithreading
 
                 var last = _out[_out.Count - 1];
                 _out.RemoveAt(_out.Count - 1);
-                return (T) last;
+                return last;
             }
         }
 
-        public bool TryDequeue(ref T e)
+        public bool TryDequeue(out T e)
         {
             lock (_mutex)
             {
@@ -51,12 +51,13 @@ namespace Multithreading
 
                 if (_out.Count == 0)
                 {
+                    e = default(T);
                     return false;
                 }
 
                 var last = _out[_out.Count - 1];
                 _out.RemoveAt(_out.Count - 1);
-                e = (T) last;
+                e = last;
                 return true;
             }
         }

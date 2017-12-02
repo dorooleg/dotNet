@@ -45,8 +45,7 @@ namespace MultithreadingTests
             queue.Enqueue(17);
             queue.Enqueue(21);
             queue.Clear();
-            var res = 0;
-            Assert.IsFalse(queue.TryDequeue(ref res));
+            Assert.IsFalse(queue.TryDequeue(out _));
         }
 
         [DataTestMethod]
@@ -59,10 +58,9 @@ namespace MultithreadingTests
         {
             var queue = CreateInstanceQueue(clazz);
             queue.Enqueue(5);
-            var res = 0;
-            Assert.IsTrue(queue.TryDequeue(ref res));
+            Assert.IsTrue(queue.TryDequeue(out var res));
             Assert.AreEqual(5, res);
-            Assert.IsFalse(queue.TryDequeue(ref res));
+            Assert.IsFalse(queue.TryDequeue(out res));
         }
 
         [DataTestMethod]

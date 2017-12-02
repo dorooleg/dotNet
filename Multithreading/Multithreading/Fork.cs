@@ -1,9 +1,11 @@
-﻿namespace Multithreading
+﻿using System.Threading;
+
+namespace Multithreading
 {
     internal class Fork
     {
-        private static uint _globalId;
+        private static int _globalId;
 
-        public uint GetId { get; } = _globalId++;
+        public int Id { get; } = Interlocked.Increment(ref _globalId);
     }
 }

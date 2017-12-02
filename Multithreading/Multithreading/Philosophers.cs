@@ -9,18 +9,24 @@ namespace Multithreading
         private const int CountPhilisophers = 5;
         private readonly Fork[] _forks = Enumerable.Range(0, CountPhilisophers).Select(_ => new Fork()).ToArray();
 
-        public void Simulate()
-        {
-            Enumerable
+        public bool Simulate()
+            => Enumerable
                 .Range(0, CountPhilisophers)
                 .Select(idx => Task.Run(() =>
                     {
                         var p = new Philosopher(_forks[idx], _forks[(idx + 1) % CountPhilisophers]);
-                        Enumerable.Range(0, AmountOfEating).ToList().ForEach(_ => p.Eat());
+                        for (var _ = 0; _ < AmountOfEating; _++)
+                        {
+                            p.Eat();
+                        }
+                        return p;
                     })
                 )
                 .ToList()
-                .ForEach(a => a.Wait());
-        }
+                .All(a =>
+                {
+                    a.Wait();
+                    return a.Result.IsDone;
+                });
     }
 }

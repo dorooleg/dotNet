@@ -11,7 +11,7 @@ namespace MultithreadingTests
         public void SimpleWaitTest()
         {
             var p = new Philosophers();
-            p.Simulate();
+            Assert.IsTrue(p.Simulate());
         }
     }
 }

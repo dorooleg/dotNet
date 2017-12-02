@@ -5,35 +5,40 @@ namespace Multithreading
 {
     internal class Philosopher
     {
-        private static uint _globalId;
-        private readonly Fork _leftHand;
-        private readonly Fork _rightHand;
+        private static int _globalId;
+        private readonly Fork _firstFork;
 
         private readonly Random _rnd = new Random();
+        private readonly Fork _secondFork;
+        private int _balanceEat;
 
-        public Philosopher(Fork leftHand, Fork rightHand)
+        public Philosopher(Fork firstFork, Fork secondFork)
         {
-            _leftHand = leftHand;
-            _rightHand = rightHand;
+            _firstFork = firstFork;
+            _secondFork = secondFork;
 
-            if (_leftHand.GetId > _rightHand.GetId)
+            if (_firstFork.Id > _secondFork.Id)
             {
-                (_leftHand, _rightHand) = (_rightHand, _leftHand);
+                (_firstFork, _secondFork) = (_secondFork, _firstFork);
             }
         }
 
-        public uint GetId { get; } = _globalId++;
+        public int Id { get; } = Interlocked.Increment(ref _globalId);
+
+        public bool IsDone => _balanceEat == 0;
 
         public void Eat()
         {
-            lock (_leftHand)
+            Interlocked.Increment(ref _balanceEat);
+            lock (_firstFork)
             {
-                lock (_rightHand)
+                lock (_secondFork)
                 {
-                    Console.WriteLine("Eat: " + GetId);
+                    Console.WriteLine("Eat: " + Id);
                     Thread.Sleep(_rnd.Next(300, 1000));
                 }
             }
+            Interlocked.Decrement(ref _balanceEat);
         }
     }
 }
