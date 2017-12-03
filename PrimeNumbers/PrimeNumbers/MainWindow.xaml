@@ -3,9 +3,17 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:primeNumbers="clr-namespace:PrimeNumbers"
         mc:Ignorable="d"
         Title="PrimeNumbers">
+    <Window.DataContext>
+        <primeNumbers:PrimesViewModel x:Name="ViewModel" />
+    </Window.DataContext>
+    <Window.Resources>
+        <primeNumbers:EnumToStringConverter x:Key="DefaultEnumToStringConverter" />
+    </Window.Resources>
     <Grid>
+
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
             <RowDefinition />
@@ -15,57 +23,44 @@
             <TextBox Name="XInput" Width="100" PreviewTextInput="NumberValidationTextBox" MaxLength="7"
                      VerticalAlignment="Center"
                      Margin="10" />
-            <Button Width="50" VerticalAlignment="Center" Content="Ok" Margin="10" Click="ButtonOk_OnClick" />
+            <Button Width="50" VerticalAlignment="Center" Content="Ok" Margin="10" Command="{Binding AddRow}"
+                    CommandParameter="{Binding Text, ElementName=XInput}" />
         </StackPanel>
 
-        <ListView x:Name="LvPrimesNumbers" Grid.Row="1" Grid.Column="0" HorizontalAlignment="Stretch"
-                  SizeChanged="ListView_SizeChanged">
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                </Style>
-            </ListView.ItemContainerStyle>
-            <ListView.View>
-                <GridView AllowsColumnReorder="False">
-                    <GridViewColumn Header="x" DisplayMemberBinding="{Binding X}" Width="50" />
+        <DataGrid x:Name="Grid" IsReadOnly="True" AutoGenerateColumns="False" Grid.Row="1"
+                  ItemsSource="{Binding Primes}">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="X" Binding="{Binding X}" />
+                <DataGridTextColumn Header="State"
+                                    Binding="{Binding CurrentState, Converter={StaticResource DefaultEnumToStringConverter}}" />
 
-                    <GridViewColumn Header="State" Width="80">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <Label Content="{Binding CurrentStateString}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
+                <DataGridTemplateColumn Header="Result">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Label Content="{Binding Result}" Visibility="{Binding ResultVisibility}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
 
-                    <GridViewColumn Header="Result" Width="80">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <Label Content="{Binding Result}" Visibility="{Binding ResultVisibility}" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
+                <DataGridTemplateColumn Header="Cancel">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <Button Content="Cancel" IsEnabled="{Binding CancelEnabled}"
+                                    Command="{Binding CancelTask, ElementName=ViewModel}"
+                                    CommandParameter="{Binding Id}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
 
-                    <GridViewColumn Header="Cancel" Width="80">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <Button Tag="{Binding Id}" Content="Cancel" IsEnabled="{Binding CancelEnabled}"
-                                        Click="ButtonCancel_OnClick" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-
-                    <GridViewColumn Header="Progress">
-                        <GridViewColumn.CellTemplate>
-                            <DataTemplate>
-                                <ProgressBar Value="{Binding ProgressValue}" Height="20" />
-                            </DataTemplate>
-                        </GridViewColumn.CellTemplate>
-                    </GridViewColumn>
-
-                </GridView>
-
-            </ListView.View>
-        </ListView>
+                <DataGridTemplateColumn Header="Progress">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <ProgressBar Value="{Binding ProgressValue}" Height="20" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 
 

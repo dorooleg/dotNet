@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Globalization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using static System.Linq.Enumerable;
 
@@ -16,10 +18,7 @@ namespace PrimeNumbers
     /// </summary>
     public partial class MainWindow
     {
-        private readonly Dictionary<int, CancellationTokenSource> _cancelations =
-            new Dictionary<int, CancellationTokenSource>();
-
-        private int _globalTaskId;
+        private static readonly Regex Regex = new Regex("[^0-9]+", RegexOptions.Compiled | RegexOptions.Singleline);
 
         public MainWindow()
         {
@@ -28,41 +27,66 @@ namespace PrimeNumbers
 
         private void NumberValidationTextBox(object sender, TextCompositionEventArgs e)
         {
-            var regex = new Regex("[^0-9]+");
-            e.Handled = regex.IsMatch(e.Text);
+            e.Handled = Regex.IsMatch(e.Text);
+        }
+    }
+
+    public class PrimesRow : INotifyPropertyChanged
+    {
+        private int _progressValue;
+
+        public int Id { get; set; }
+
+        public TaskStatus CurrentState => Task.Status;
+
+        public int X { get; set; }
+
+        public int Result { get; set; }
+
+        public Visibility ResultVisibility { get; set; }
+
+        public Task Task { get; set; }
+
+        public int ProgressValue
+        {
+            get => _progressValue;
+            set
+            {
+                _progressValue = value;
+                NotifyPropertyChanged();
+            }
         }
 
-        private void ListView_SizeChanged(object sender, SizeChangedEventArgs e)
-        {
-            if (!(sender is ListView listView))
-            {
-                return;
-            }
+        public bool CancelEnabled => !Task.IsCompleted && !Task.IsFaulted && !Task.IsCanceled;
 
-            listView.UpdateLayout();
-            UpdateColumnsWidth(listView);
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public void NotifyPropertyChanged()
+        {
+            NotifyPropertyChanged(string.Empty);
         }
 
-        private static void UpdateColumnsWidth(ListView listView)
+        private void NotifyPropertyChanged(string propertyName)
         {
-            if (!(listView.View is GridView grid))
-            {
-                return;
-            }
-
-            var autoFillColumnIndex = grid.Columns.Count - 1;
-            if (double.IsNaN(listView.ActualWidth))
-            {
-                listView.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
-            }
-            var remainingSpace = grid.Columns.Where((t, i) => i != autoFillColumnIndex)
-                .Aggregate(listView.ActualWidth, (current, t) => current - t.ActualWidth);
-            grid.Columns[autoFillColumnIndex].Width = Math.Max(remainingSpace - 30, 0);
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
+    }
 
-        private void ButtonOk_OnClick(object sender, RoutedEventArgs e)
+    public class PrimesViewModel
+    {
+        private readonly Dictionary<int, CancellationTokenSource> _cancelations =
+            new Dictionary<int, CancellationTokenSource>();
+
+        private ICommand _adder;
+        private ICommand _canceller;
+
+        private int _globalTaskId;
+        public ObservableCollection<PrimesRow> Primes { get; set; } = new ObservableCollection<PrimesRow>();
+
+        public ICommand AddRow => _adder ?? (_adder = new SimpleCommand(async p =>
         {
-            if (XInput.Text.Length == 0)
+            var x = (string) p;
+            if (x.Length == 0)
             {
                 return;
             }
@@ -71,113 +95,98 @@ namespace PrimeNumbers
 
             _cancelations[_globalTaskId++] = cts;
 
-            var row = new PrimeNumbersRow
+            var row = new PrimesRow
             {
                 Id = _globalTaskId - 1,
-                X = int.Parse(XInput.Text),
+                X = int.Parse(x),
                 Result = 0,
-                ResultVisibility = Visibility.Hidden,
-                CancelEnabled = true,
-                ProgressValue = 0
+                ResultVisibility = Visibility.Hidden
             };
-            XInput.Clear();
 
-            LvPrimesNumbers.Items.Add(row);
+            Primes.Add(row);
 
-
-            Task.Run(() =>
+            var task = Task.Run(() =>
             {
-                if (cts.IsCancellationRequested)
-                {
-                    row.CurrentState = PrimeNumbersRow.State.Canceled;
-                    row.CancelEnabled = false;
-                    return;
-                }
+                IProgress<int> progress = new Progress<int>(i => { row.ProgressValue = i; });
 
-                row.CurrentState = PrimeNumbersRow.State.Running;
+                cts.Token.ThrowIfCancellationRequested();
 
                 var result = 0;
 
-                foreach (var number in Range(2, row.X - 1))
+                if (row.X >= 2)
                 {
-                    result += number.IsPrime() ? 1 : 0;
-
-                    if (cts.IsCancellationRequested)
+                    foreach (var number in Range(2, row.X - 1))
                     {
-                        row.CurrentState = PrimeNumbersRow.State.Canceled;
-                        row.CancelEnabled = false;
-                        return;
-                    }
+                        result += number.IsPrime() ? 1 : 0;
 
-                    row.ProgressValue = 100 * number / row.X;
+                        cts.Token.ThrowIfCancellationRequested();
+
+                        progress.Report(100 * number / row.X);
+                    }
                 }
 
                 row.ProgressValue = 100;
-                row.CurrentState = PrimeNumbersRow.State.Done;
                 row.ResultVisibility = Visibility.Visible;
                 row.Result = result;
-                row.CancelEnabled = false;
             }, cts.Token);
-        }
 
-        private void ButtonCancel_OnClick(object sender, RoutedEventArgs e)
+            row.Task = task;
+
+            try
+            {
+                await task;
+            }
+            catch (OperationCanceledException)
+            {
+            }
+
+            row.NotifyPropertyChanged();
+        }));
+
+        public ICommand CancelTask =>
+            _canceller ?? (_canceller = new SimpleCommand(p => { _cancelations[(int) p].Cancel(); }));
+
+        private class SimpleCommand : ICommand
         {
-            var id = int.Parse(((Button) sender).Tag.ToString());
-            _cancelations[id].Cancel();
-        }
+            #region ICommand Members
 
-        public class PrimeNumbersRow : INotifyPropertyChanged
+            private readonly Action<object> _execute;
+
+            public SimpleCommand(Action<object> execute) => _execute = execute;
+
+            public bool CanExecute(object parameter) => true;
+
+            public event EventHandler CanExecuteChanged
+            {
+                add => CommandManager.RequerySuggested += value;
+                remove => CommandManager.RequerySuggested -= value;
+            }
+
+            public void Execute(object parameter)
+            {
+                _execute(parameter);
+            }
+
+            #endregion
+        }
+    }
+
+    public class EnumToStringConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            public enum State
+            try
             {
-                Wait,
-                Running,
-                Done,
-                Canceled
+                var enumString = Enum.GetName(value.GetType(), value);
+                return enumString;
             }
-
-            private State _currentState;
-
-            private int _progressValue;
-
-            public int Id { get; set; }
-
-            public State CurrentState
+            catch
             {
-                get => _currentState;
-                set
-                {
-                    _currentState = value;
-                    NotifyPropertyChanged();
-                }
-            }
-
-            public int X { get; set; }
-
-            public int Result { get; set; }
-
-            public Visibility ResultVisibility { get; set; }
-
-            public string CurrentStateString => CurrentState.ToString();
-
-            public int ProgressValue
-            {
-                get => _progressValue;
-                set
-                {
-                    _progressValue = value;
-                    NotifyPropertyChanged();
-                }
-            }
-
-            public bool CancelEnabled { get; set; }
-
-            public event PropertyChangedEventHandler PropertyChanged;
-
-            private void NotifyPropertyChanged(string propertyName = "")
-            {
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+                return string.Empty;
             }
         }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) =>
+            throw new NotImplementedException();
     }
 }
