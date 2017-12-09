@@ -1,4 +1,7 @@
-﻿// 1. Посчитать числа Фибоначчи (за линейное время)
+﻿#nowarn "40"
+
+// 1. Посчитать числа Фибоначчи (за линейное время)
+type fib = bigint -> bigint
 let fib n = 
     let rec fib' (n, a, b) =
         match n with
@@ -16,11 +19,12 @@ let rev l =
     rev' l []
 
 // 3. Написать mergesort: функцию, которая принимает список и возвращает отсортированный список
-let rec merge = function
+let rec merge (l, r) =
+    match (l, r) with
     | ([], ys) -> ys
     | (xs, []) -> xs
-    | (x::xs, y::ys) -> if x < y then x :: merge (xs, y::ys)
-                        else y :: merge (x::xs, ys)
+    | (x::xs, y::ys) -> if x < y then x :: merge (xs, r)
+                        else y :: merge (l, ys)
 
 let rec split = function
     | [] -> ([], [])
@@ -39,7 +43,7 @@ type Expression =
     | Number of int
     | Add of Expression * Expression
     | Sub of Expression * Expression
-    | Multiply of Expression * Expression
+    | Mul of Expression * Expression
     | Div of Expression * Expression
     | Mod of Expression * Expression
 
@@ -47,7 +51,7 @@ let rec Evaluate = function
     | Number n -> n
     | Add (x, y) -> Evaluate x + Evaluate y
     | Sub (x, y) -> Evaluate x - Evaluate y
-    | Multiply (x, y) -> Evaluate x * Evaluate y
+    | Mul (x, y) -> Evaluate x * Evaluate y
     | Div (x, y) -> Evaluate x / Evaluate y
     | Mod (x, y) -> Evaluate x % Evaluate y
 
@@ -61,6 +65,16 @@ and primes =
     seq {
         yield 2I
         yield! Seq.unfold (fun i -> Some (i, i + 2I)) 3I |> Seq.filter isprime
+    }
+
+let rec isprime' x =
+    let rec check i = i * i > x || x % i <> 0I && check <| i + 1I
+    check 2I
+
+let primes' =
+    seq {
+        yield 2I
+        yield! Seq.unfold (fun i -> Some (i, i + 2I)) 3I |> Seq.filter isprime'
     }
 
 
@@ -85,7 +99,7 @@ assert (mergesort [2; 1] = [1; 2])
 assert (mergesort [0; 2; 1; 3; 2] = [0; 1; 2; 2; 3])
 
 // 4. Evaluate Expression Test
-let tree = Add(Number 3, Multiply(Number 2, Div (Number 6, Sub(Number 4, Mod(Number 1, Number 2)))))
+let tree = Add(Number 3, Mul(Number 2, Div (Number 6, Sub(Number 4, Mod(Number 1, Number 2)))))
 assert (Evaluate tree = 7)
 
 // 5. Primes Test
@@ -93,3 +107,8 @@ assert (Seq.toList (Seq.take 0 primes) = [])
 assert (Seq.toList (Seq.take 1 primes) = [2I])
 assert (Seq.toList (Seq.take 2 primes) = [2I; 3I])
 assert (Seq.toList (Seq.take 3 primes) = [2I; 3I; 5I])
+
+assert (Seq.toList (Seq.take 0 primes') = [])
+assert (Seq.toList (Seq.take 1 primes') = [2I])
+assert (Seq.toList (Seq.take 2 primes') = [2I; 3I])
+assert (Seq.toList (Seq.take 3 primes') = [2I; 3I; 5I])
